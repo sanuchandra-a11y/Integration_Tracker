@@ -1328,241 +1328,265 @@ function sv(name, el){
   if(name==='obtrack') renderOBT();
   if(name==='pricing') renderPricing();
   if(name==='slack') slkRender();
-  if(name==='dashboard' && typeof animateDBVRing==='function') animateDBVRing();
+  if(name==='dashboard') renderCRMView();
 }
 
 document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
 </script>
 <div id="view-dashboard" class="view">
 <style>
-/* ── Dashboard tab v5 — real data + visual refresh ── */
-.dbv-eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#15803d;font-weight:800;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.dbv-hero{display:grid;grid-template-columns:280px 1fr;gap:28px;align-items:center;background:linear-gradient(135deg,#0b1220,#132447 55%,#1b2f5c);border-radius:18px;padding:32px 36px;margin:14px 0 22px;color:#fff;position:relative;overflow:hidden;}
-.dbv-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.25),transparent 70%);}
-.dbv-ring-wrap{position:relative;width:220px;height:220px;flex-shrink:0;}
-.dbv-ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.dbv-ring-pct{font-size:44px;font-weight:900;line-height:1;background:linear-gradient(90deg,#4ade80,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.dbv-ring-sub{font-size:11px;color:#93c5fd;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:6px;}
-.dbv-hero-right h1{font-size:28px;font-weight:900;line-height:1.15;margin-bottom:8px;}
-.dbv-hero-right h1 .ac{background:linear-gradient(90deg,#4ade80,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.dbv-hero-sub{font-size:13.5px;color:#cbd5e1;line-height:1.7;max-width:640px;margin-bottom:18px;}
-.dbv-hero-stats{display:flex;gap:22px;flex-wrap:wrap;}
-.dbv-hero-stat{min-width:110px;}
-.dbv-hero-stat .n{font-size:26px;font-weight:900;line-height:1;}
-.dbv-hero-stat .l{font-size:10.5px;color:#94a3b8;margin-top:4px;letter-spacing:.03em;}
-
-.dbv-funnel-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:22px 26px;margin-bottom:20px;}
-.dbv-funnel-title{font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px;}
-.dbv-funnel-sub{font-size:11px;color:var(--muted);margin-bottom:18px;}
-.dbv-funnel-track{display:flex;align-items:stretch;gap:6px;}
-.dbv-stage{flex:1;position:relative;padding:16px 14px 14px;border-radius:10px;color:#fff;overflow:hidden;min-height:96px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .25s ease;}
-.dbv-stage:hover{transform:translateY(-3px);}
-.dbv-stage .stage-n{font-size:26px;font-weight:900;line-height:1;}
-.dbv-stage .stage-l{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;opacity:.92;margin-top:6px;}
-.dbv-stage .stage-pct{font-size:10px;opacity:.8;margin-top:2px;}
-.dbv-arrow{align-self:center;color:#cbd5e1;font-size:18px;flex-shrink:0;}
-
-.dbv-cat-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
-.dbv-cat-hdr{padding:16px 22px 12px;}
-.dbv-cat-title{font-size:13px;font-weight:800;color:var(--text);}
-.dbv-cat-sub{font-size:11px;color:var(--muted);margin-top:2px;}
-.dbv-cat-row{display:grid;grid-template-columns:150px 1fr 60px;gap:14px;align-items:center;padding:10px 22px;border-top:1px solid var(--border);}
-.dbv-cat-row:hover{background:var(--bg3);}
-.dbv-cat-name{font-size:12.5px;font-weight:700;color:var(--text);}
-.dbv-cat-name .n{display:block;font-size:9.5px;font-weight:600;color:var(--muted);margin-top:1px;}
-.dbv-cat-bar-track{position:relative;height:22px;background:var(--bg3);border-radius:6px;overflow:hidden;display:flex;}
-.dbv-cat-seg{height:100%;transition:width .6s ease;}
-.dbv-cat-pct{font-size:13px;font-weight:800;text-align:right;}
-
-.dbv-legend{display:flex;gap:16px;flex-wrap:wrap;padding:12px 22px 18px;font-size:10.5px;color:var(--muted);}
-.dbv-legend span{display:inline-flex;align-items:center;gap:5px;}
-.dbv-legend i{width:9px;height:9px;border-radius:2px;display:inline-block;}
-
-.dbv-summary{background:linear-gradient(135deg,#0f172a,#1e3a5f);border-radius:14px;padding:24px 28px;color:#fff;}
-.dbv-summary-eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#7dd3fc;font-weight:800;margin-bottom:10px;}
-.dbv-summary p{font-size:14.5px;line-height:1.85;max-width:920px;}
-.dbv-summary strong{color:#4ade80;}
+/* ── Dashboard tab v6 — CRM View, sourced from CRM_View_for_CEO sheet ── */
+.cv-eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#15803d;font-weight:800;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.cv-h1{font-size:26px;font-weight:900;color:#111827;margin-bottom:4px;}
+.cv-sub{font-size:12.5px;color:#4b5563;margin-bottom:16px;max-width:900px;line-height:1.6;}
+.cv-strip{display:grid;grid-template-columns:repeat(9,1fr);gap:8px;margin-bottom:16px;}
+.cv-sc{background:#fff;border:1px solid #e5e7eb;border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:border-color .15s;}
+.cv-sc:hover,.cv-sc.active{border-color:#2563eb;}
+.cv-sc .n{font-size:20px;font-weight:900;line-height:1;}
+.cv-sc .l{font-size:8.5px;font-weight:700;color:#6b7280;margin-top:4px;text-transform:uppercase;letter-spacing:.02em;line-height:1.3;}
+.cv-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.cv-sel{padding:5px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;background:#fff;color:#111827;outline:none;}
+.cv-srch{margin-left:auto;position:relative;}
+.cv-srch input{background:#fff;border:1px solid #d1d5db;border-radius:6px;color:#111827;font-size:12px;padding:5px 10px 5px 26px;width:200px;outline:none;}
+.cv-srch .ic{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:13px;}
+.cv-stage-badge{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;}
+.cv-cat-tag{font-size:9.5px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.03em;}
+.cv-next{font-size:11.5px;color:#374151;max-width:220px;}
+.cv-last{font-size:11.5px;color:#6b7280;max-width:200px;}
+.cv-dash{color:#c9ccd2;}
 </style>
 
-  <div class="dbv-eyebrow"><span>Integration Program Office · CEO Review</span><span class="cm">v5.0 · Live Data — Integration Collaboration Sheet</span></div>
+<div class="cv-eyebrow"><span>Integration Program Office · CEO Review</span><span class="cm">v6.0 · CRM View — CRM_View_for_CEO sheet</span></div>
+<div class="cv-h1">Integration CRM View</div>
+<div class="cv-sub">Every partner's real pipeline stage, straight from the CRM View tracker — <strong>Stage</strong>, who it's <strong>Blocked On</strong>, the <strong>ETA</strong>, <strong>Next Steps</strong>, and the <strong>Last Activity</strong> logged. Click a stage below to filter.</div>
 
-  <!-- HERO: signature progress ring + headline -->
-  <div class="dbv-hero">
-    <div class="dbv-ring-wrap">
-      <svg viewBox="0 0 220 220" width="220" height="220">
-        <circle cx="110" cy="110" r="92" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="16"/>
-        <circle id="dbv-ring-fg" cx="110" cy="110" r="92" fill="none" stroke="url(#dbvGrad)" stroke-width="16" stroke-linecap="round"
-          stroke-dasharray="578" stroke-dashoffset="578" transform="rotate(-90 110 110)"/>
-        <defs>
-          <linearGradient id="dbvGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#4ade80"/>
-            <stop offset="100%" stop-color="#22d3ee"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      <div class="dbv-ring-label">
-        <div class="dbv-ring-pct">32%</div>
-        <div class="dbv-ring-sub">Partners Live</div>
-      </div>
-    </div>
-    <div class="dbv-hero-right">
-      <div class="dbv-hero-stats">
-        <div class="dbv-hero-stat"><div class="n" style="color:#4ade80;">34</div><div class="l">LIVE / COMPLETED</div></div>
-        <div class="dbv-hero-stat"><div class="n" style="color:#f8fafc;">107</div><div class="l">PARTNERS TRACKED</div></div>
-        <div class="dbv-hero-stat"><div class="n" style="color:#60a5fa;">98</div><div class="l">REACHOUTS SENT</div></div>
-        <div class="dbv-hero-stat"><div class="n" style="color:#c4b5fd;">38</div><div class="l">KICKOFF INITIATED</div></div>
-      </div>
-    </div>
-  </div>
+<!-- STAGE SUMMARY STRIP -->
+<div class="cv-strip" id="cv-strip"></div>
 
-  <!-- FUNNEL -->
-  <div class="dbv-funnel-wrap">
-    <div class="dbv-funnel-title">Integration funnel — real counts from Integration Collaboration Sheet</div>
-    <div class="dbv-funnel-sub">107 partners total · each stage shows % of the stage before it</div>
-    <div class="dbv-funnel-track">
-      <div class="dbv-stage" style="background:#dcfce7;color:#15803d;">
-        <div class="stage-n">34 ✓</div><div><div class="stage-l">Live</div><div class="stage-pct" style="color:#15803d;opacity:.75;">32% of 107</div></div>
-      </div>
-      <div class="dbv-arrow">←</div>
-      <div class="dbv-stage" style="background:#dbeafe;color:#1e40af;">
-        <div class="stage-n">38</div><div><div class="stage-l">Kickoff Initiated</div><div class="stage-pct" style="color:#1e40af;opacity:.75;">36% of 107</div></div>
-      </div>
-      <div class="dbv-arrow">←</div>
-      <div class="dbv-stage" style="background:#e2e8f0;color:#475569;">
-        <div class="stage-n">47</div><div><div class="stage-l">MOU / NDA Signed</div><div class="stage-pct" style="color:#475569;opacity:.75;">44% of 107</div></div>
-      </div>
-      <div class="dbv-arrow">←</div>
-      <div class="dbv-stage" style="background:#e0f2fe;color:#0369a1;">
-        <div class="stage-n">91</div><div><div class="stage-l">Meeting Done</div><div class="stage-pct" style="color:#0369a1;opacity:.75;">85% of 107</div></div>
-      </div>
-      <div class="dbv-arrow">←</div>
-      <div class="dbv-stage" style="background:#f1f5f9;color:#64748b;">
-        <div class="stage-n">98</div><div><div class="stage-l">Reachout Sent</div><div class="stage-pct" style="color:#64748b;opacity:.75;">92% of 107</div></div>
-      </div>
-    </div>
-  </div>
+<!-- FILTERS -->
+<div class="cv-filters">
+  <span style="font-size:11px;color:#4b5563;font-weight:600;">Category:</span>
+  <select id="cv-cat" class="cv-sel" onchange="renderCRMView()"><option value="all">All</option></select>
+  <span style="font-size:11px;color:#4b5563;font-weight:600;">Blocked On:</span>
+  <select id="cv-blocked" class="cv-sel" onchange="renderCRMView()">
+    <option value="all">All</option>
+    <option value="Partner">Partner</option>
+    <option value="Spyne">Spyne</option>
+    <option value="none">Unblocked</option>
+  </select>
+  <div class="cv-srch"><span class="ic">⌕</span><input id="cv-q" placeholder="Search partner…" oninput="renderCRMView()"></div>
+</div>
 
-  <!-- CATEGORY BREAKDOWN — click a category to see exactly who's live and who's in which stage -->
-  <div class="dbv-cat-wrap">
-    <div class="dbv-cat-hdr">
-      <div class="dbv-cat-title">Who's live, by category — click a category to expand</div>
-      <div class="dbv-cat-sub">Source: Integration Collaboration Sheet — Final Tracker</div>
-    </div>
-    <div id="dbv-cat-rows"></div>
+<!-- TABLE -->
+<div class="tw">
+  <div class="th2">
+    <div class="tt" id="cv-caption">All partners · CRM View tracker</div>
+    <div class="tn">Click a stage card above to filter · Source: CRM_View_for_CEO sheet</div>
   </div>
+  <div style="overflow-x:auto;">
+  <table>
+    <thead><tr>
+      <th>Category</th>
+      <th>Partner</th>
+      <th>Stage</th>
+      <th>Blocked On</th>
+      <th>ETA</th>
+      <th>Next Steps</th>
+      <th>Last Activity</th>
+    </tr></thead>
+    <tbody id="cv-tbody"></tbody>
+  </table>
+  </div>
+</div>
 </div>
 
 <script>
-const DBV_CAT_BREAKDOWN = {
-  "Sales CRM": {
-    "live": ["Dealersync", "DriveCentric", "Elead", "Tekion", "Vinsolutions"],
-    "dev": ["Dealersocket (Solera)"],
-    "biz": ["Momentum CRM", "Reynolds Sales"],
-    "meet": ["AutoRaptor", "AutoRevo", "CarWars", "DealerCenter", "Dealerpeak", "DealersLink", "HubSpot", "Light Speed", "ProMax (NCC)", "Quorum"],
-    "reach": ["CRM-ADF"]
-  },
-  "Service Scheduler": {
-    "live": ["CDK Service scheduler", "DealerFX", "MyKaarma", "PBS", "Tekion", "xTime"],
-    "biz": ["DealerLogix", "Redcap- Solera", "Reynolds Services", "Status Plus", "TCC", "Update Promise"],
-    "meet": ["Auto.live", "AutoPoint (Solera)", "Light Speed"],
-    "reach": ["Auto Live", "AutoLoop", "Omnique", "Protractor"],
-    "pend": ["Rapid Recon", "ServiceDrive"]
-  },
-  "DMS": {
-    "live": ["CDK DMS", "Frazer", "Tekion"],
-    "biz": ["Dealerbuilt", "Dealertrack DMS", "Reynolds DMS"],
-    "meet": ["Affinitiv/AutoLoop", "Automate (Solera)", "Light Speed", "PBS"],
-    "reach": ["Dominion DMS", "Transax"]
-  },
-  "IMS / Inventory": {
-    "live": ["1 Source Trader", "Dealercarsearch", "Dealersync", "HomeNet (Cox)", "Homenet", "JD Power", "Redline/Predian", "Vin solutions", "Vincue", "inventory-plus", "maxDigital (ACV)", "vAuto"],
-    "dev": ["Tekion Inventory"],
-    "biz": ["Reynolds Inventory"],
-    "meet": ["Carfax"]
-  },
-  "Marketplaces": {
-    "live": ["Autotrader UK"],
-    "meet": ["Autotrader", "CarGurus", "Carbravo", "Carfax", "Cars.com", "CarsGuide", "Carsales (AU)", "Drive (AU)", "Edmunds", "Facebook Marketplace", "Gumtree Motors", "Heycar", "KBB (Kelley Blue Book)", "Mobile.de", "Oodle", "TrueCar", "eBay Motors"],
-    "reach": ["AutoScout24", "Autolist", "Carwow"],
-    "pend": ["Carvana", "Kalley Blue Book", "Motors.co.uk"]
-  },
-  "Website Providers": {
-    "live": ["Dealer Inspire", "Dealer On", "Dealer.com", "EDealer"],
-    "meet": ["TeamVelocity"],
-    "reach": ["Overfuel"]
-  },
-  "Payments": {
-    "dev": ["Infomativ", "Offerlogix"]
-  },
-  "Vin Decoding": {
-    "live": ["ClearVIN"],
-    "biz": ["BlackBooks"]
-  },
-  "Parts": {
-    "meet": ["Revolution parts"]
-  },
-  "CJi Provider": {
-    "live": ["evox"]
-  },
-  "Syndication": {
-    "live": ["Jd Power"]
-  },
-  "Catalog Management": {
-    "dev": ["Dealer Specialities"],
-    "meet": ["Car For Sales", "DC"]
-  }
+const CRM_STAGE_ORDER = ['Not Started','Reachout','Meeting Scheduled','Meeting Done','Business Discussion','Integration Testing','In Progress','Completed','Rejected'];
+const CRM_STAGE_COLOR = {
+  'Not Started':        {fg:'#6b7280', bg:'#f3f4f6'},
+  'Reachout':            {fg:'#475569', bg:'#f1f5f9'},
+  'Meeting Scheduled':   {fg:'#5b21b6', bg:'#ede9fe'},
+  'Meeting Done':        {fg:'#0369a1', bg:'#e0f2fe'},
+  'Business Discussion': {fg:'#92400e', bg:'#fef3c7'},
+  'Integration Testing': {fg:'#0f766e', bg:'#ccfbf1'},
+  'In Progress':         {fg:'#3730a3', bg:'#e0e7ff'},
+  'Completed':           {fg:'#15803d', bg:'#dcfce7'},
+  'Rejected':            {fg:'#b91c1c', bg:'#fee2e2'},
 };
 
-function renderDBVCategories(){
-  const wrap = document.getElementById("dbv-cat-rows");
-  if(!wrap) return;
-  const STAGE_LABEL = {live:'Live', dev:'In Dev', biz:'MOU / Biz Discussion', meet:'Meeting Aligned', reach:'Reachout Sent', pend:'Not Engaged'};
-  const STAGE_COLOR = {live:'#15803d', dev:'#1e40af', biz:'#475569', meet:'#0369a1', reach:'#64748b', pend:'#9ca3af'};
-  const STAGE_BG    = {live:'#dcfce7', dev:'#dbeafe', biz:'#e2e8f0', meet:'#e0f2fe', reach:'#f1f5f9', pend:'#f3f4f6'};
-  const order = ['live','dev','biz','meet','reach','pend'];
+const CRM_VIEW = [
+  { cat: "Sales CRM", name: "Vinsolutions", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Sales CRM", name: "Elead", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Sales CRM", name: "Dealersocket (Solera)", stage: "Integration Testing", blocked: "", eta: "", next: "Followed up On the email Yesterday Dave is also following up", last: "Dealersocket dev team not responding" },
+  { cat: "Sales CRM", name: "Tekion", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Sales CRM", name: "Dealersync", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Sales CRM", name: "Momentum CRM", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "Reached out to POC, 2/17" },
+  { cat: "Sales CRM", name: "DealerCenter", stage: "Business Discussion", blocked: "", eta: "", next: "Meeting on 2/27", last: "" },
+  { cat: "Sales CRM", name: "CarWars", stage: "Business Discussion", blocked: "", eta: "", next: "Low priority", last: "Had initial demo some time ago" },
+  { cat: "Sales CRM", name: "DriveCentric", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Sales CRM", name: "AutoRevo", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "reached out to Bill 2/18" },
+  { cat: "Sales CRM", name: "Quorum", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Sales CRM", name: "Reynolds Sales", stage: "Business Discussion", blocked: "Partner", eta: "", next: "2/23 for proposal", last: "Reyrey working on proposal" },
+  { cat: "Sales CRM", name: "Light Speed", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Sales CRM", name: "ProMax (NCC)", stage: "Rejected", blocked: "", eta: "", next: "", last: "NCC/ Brian Skutta reach out 2/18" },
+  { cat: "Sales CRM", name: "AutoRaptor", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "Having own CI doesnt want to integrate" },
+  { cat: "Sales CRM", name: "Dealerpeak", stage: "Integration Testing", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "xTime", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "MyKaarma", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Status Plus", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Update Promise", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "Scheduled call 2/20" },
+  { cat: "Service Scheduler", name: "Protractor", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "AutoLoop", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Auto Live", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Omnique", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "TCC", stage: "Business Discussion", blocked: "Partner", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Light Speed", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "CDK Service scheduler", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Reynolds Services", stage: "Business Discussion", blocked: "Partner", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "DealerLogix", stage: "Business Discussion", blocked: "Partner", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "ServiceDrive", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "AutoPoint (Solera)", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Rapid Recon", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "DealerFX", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Auto.live", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Tekion", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "PBS", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Evenflow", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Service Scheduler", name: "Redcap- Solera", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "CDK DMS", stage: "Completed", blocked: "Spyne", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "Reynolds DMS", stage: "Business Discussion", blocked: "Partner", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "Dealertrack DMS", stage: "Meeting Done", blocked: "Spyne", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "Automate (Solera)", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "Dealerbuilt", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "Tekion", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "Affinitiv/AutoLoop", stage: "Meeting Done", blocked: "Partner", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "Light Speed", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "Dominion DMS", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "PBS", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "Frazer", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Payments", name: "Offerlogix", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Payments", name: "Infomativ", stage: "In Progress", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "vAuto", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "Reynolds Inventory", stage: "Business Discussion", blocked: "Partner", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "Vincue", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "Homenet", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "Carfax", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "inventory-plus", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "Dealersync", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "Dealercarsearch", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "maxDigital (ACV)", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "HomeNet (Cox)", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "Vin solutions", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "Redline/Predian", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "JD Power", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "1 Source Trader", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "IMS", name: "Tekion Inventory", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Autotrader", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "CarGurus", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Cars.com", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Carvana", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Carfax", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Kalley Blue Book", stage: "Integration Testing", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Carbravo", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "TrueCar", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Autotrader UK", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Edmunds", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Carsales (AU)", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Drive (AU)", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "KBB (Kelley Blue Book)", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Facebook Marketplace", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "eBay Motors", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Oodle", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Autolist", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Carwow", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Motors.co.uk", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "AutoScout24", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Mobile.de", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Heycar", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "CarsGuide", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Marketplaces", name: "Gumtree Motors", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Website Providers", name: "Dealer Inspire", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Website Providers", name: "Dealer.com", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Website Providers", name: "Dealer On", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Website Providers", name: "EDealer", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Website Providers", name: "TeamVelocity", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Website Providers", name: "Overfuel", stage: "Not Started", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Parts", name: "Revolution parts", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Catalog Management", name: "Dealer Specialities", stage: "Integration Testing", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Catalog Management", name: "Car For Sales", stage: "Meeting Scheduled", blocked: "Partner", eta: "", next: "", last: "" },
+  { cat: "Catalog Management", name: "DC", stage: "Meeting Done", blocked: "Spyne", eta: "", next: "", last: "" },
+  { cat: "Vin Decoding", name: "BlackBooks", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Vin Decoding", name: "ClearVIN", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "DMS", name: "Transax", stage: "Not Started", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Sales CRM", name: "HubSpot", stage: "Not Started", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Syndication", name: "Jd Power", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+  { cat: "Sales CRM", name: "CRM-ADF", stage: "Not Started", blocked: "", eta: "", next: "", last: "" },
+  { cat: "CJi Provider", name: "evox", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
+];
 
-  wrap.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:18px;padding:20px 22px;">` +
-    Object.keys(DBV_CAT_BREAKDOWN).map(cat => {
-      const buckets = DBV_CAT_BREAKDOWN[cat];
-      const total = order.reduce((s,k)=>s+(buckets[k]?buckets[k].length:0), 0);
-      const liveCount = (buckets.live || []).length;
-      return `
-      <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px 22px;">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;border-bottom:2px solid #f3f4f6;padding-bottom:12px;">
-          <div style="font-size:20px;font-weight:900;color:var(--text);">${cat}</div>
-          <div style="text-align:right;">
-            <div style="font-size:26px;font-weight:900;color:#15803d;line-height:1;">${liveCount}<span style="font-size:13px;color:#9ca3af;font-weight:700;"> / ${total} live</span></div>
-          </div>
-        </div>
-        ${order.filter(k=>buckets[k] && buckets[k].length).map(k=>`
-          <div style="margin-bottom:14px;">
-            <div style="font-size:12.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:${STAGE_COLOR[k]};margin-bottom:8px;">${STAGE_LABEL[k]} <span style="color:#9ca3af;font-weight:700;">— ${buckets[k].length}</span></div>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;">
-              ${buckets[k].map(name=>`<span style="background:${STAGE_BG[k]};color:${STAGE_COLOR[k]};padding:7px 16px;border-radius:8px;font-size:15px;font-weight:700;">${name}</span>`).join('')}
-            </div>
-          </div>`).join('')}
-      </div>`;
-    }).join('') + `</div>`;
+let cv_stage = 'all', cv_cat = 'all', cv_blocked = 'all';
+const CRM_ALL_CATS = [...new Set(CRM_VIEW.map(r=>r.cat))].sort();
+
+function cvFilterStage(s, el){
+  cv_stage = (cv_stage===s) ? 'all' : s;
+  renderCRMView();
 }
 
-function animateDBVRing(){
-  const ring = document.getElementById('dbv-ring-fg');
-  if(!ring) return;
-  const pct = 34/107; // live / total
-  const circumference = 578;
-  const offset = circumference - (pct*circumference);
-  ring.style.transition = 'none';
-  ring.setAttribute('stroke-dashoffset', circumference);
-  requestAnimationFrame(()=>{
-    setTimeout(()=>{
-      ring.style.transition = 'stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1)';
-      ring.setAttribute('stroke-dashoffset', offset);
-    }, 80);
-  });
-}
+function renderCRMView(){
+  const catSel = document.getElementById('cv-cat');
+  if(catSel && catSel.options.length<=1){
+    catSel.innerHTML = '<option value="all">All</option>' + CRM_ALL_CATS.map(c=>`<option value="${c}">${c}</option>`).join('');
+  }
+  cv_cat = catSel ? catSel.value : 'all';
+  cv_blocked = (document.getElementById('cv-blocked')||{}).value || 'all';
+  const q = ((document.getElementById('cv-q')||{}).value||'').toLowerCase();
 
-renderDBVCategories();
+  // stage counts computed off the full dataset, independent of filters, so the strip is a stable overview
+  const counts = {};
+  CRM_STAGE_ORDER.forEach(s=>counts[s]=0);
+  CRM_VIEW.forEach(r=>{ if(counts[r.stage]!==undefined) counts[r.stage]++; });
+
+  document.getElementById('cv-strip').innerHTML = CRM_STAGE_ORDER.map(s=>{
+    const col = CRM_STAGE_COLOR[s];
+    const active = cv_stage===s ? 'active' : '';
+    return `<div class="cv-sc ${active}" onclick="cvFilterStage('${s}', this)">
+      <div class="n" style="color:${col.fg};">${counts[s]}</div>
+      <div class="l">${s}</div>
+    </div>`;
+  }).join('');
+
+  let d = CRM_VIEW.filter(r=>true);
+  if(cv_stage!=='all') d = d.filter(r=>r.stage===cv_stage);
+  if(cv_cat!=='all') d = d.filter(r=>r.cat===cv_cat);
+  if(cv_blocked==='none') d = d.filter(r=>!r.blocked);
+  else if(cv_blocked!=='all') d = d.filter(r=>r.blocked===cv_blocked);
+  if(q) d = d.filter(r=>r.name.toLowerCase().includes(q) || r.cat.toLowerCase().includes(q));
+
+  d = [...d].sort((a,b)=> a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
+
+  document.getElementById('cv-caption').textContent =
+    (cv_stage!=='all' ? cv_stage+' · ' : '') +
+    (cv_cat!=='all' ? cv_cat+' · ' : '') +
+    d.length+' of '+CRM_VIEW.length+' partners · CRM View tracker';
+
+  document.getElementById('cv-tbody').innerHTML = d.map(r=>{
+    const col = CRM_STAGE_COLOR[r.stage] || {fg:'#6b7280',bg:'#f3f4f6'};
+    const blBadge = r.blocked==='Partner' ? '<span class="bl-partner">Partner</span>'
+      : r.blocked==='Spyne' ? '<span class="bl-spyne">Spyne</span>'
+      : '<span class="bl-none">—</span>';
+    return `<tr>
+      <td class="cv-cat-tag">${r.cat}</td>
+      <td style="font-weight:700;font-size:12.5px;">${r.name}</td>
+      <td><span class="cv-stage-badge" style="background:${col.bg};color:${col.fg};">${r.stage}</span></td>
+      <td>${blBadge}</td>
+      <td style="font-size:11.5px;color:#6b7280;">${r.eta || '<span class="cv-dash">—</span>'}</td>
+      <td class="cv-next">${r.next || '<span class="cv-dash">—</span>'}</td>
+      <td class="cv-last">${r.last || '<span class="cv-dash">—</span>'}</td>
+    </tr>`;
+  }).join('');
+}
 </script>
+
 
 <!-- ═══════════════════════════════════════════════════
      TAB: INTEGRATION PRICING
