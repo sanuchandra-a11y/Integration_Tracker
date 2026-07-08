@@ -1372,6 +1372,12 @@ document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
     <option value="Spyne">Spyne</option>
     <option value="none">Unblocked</option>
   </select>
+  <span style="font-size:11px;color:#4b5563;font-weight:600;">Sort by:</span>
+  <select id="cv-sort" class="cv-sel" onchange="renderCRMView()">
+    <option value="default">Category (default)</option>
+    <option value="arr">ARR — highest first</option>
+    <option value="rooftops">Rooftop Count — highest first</option>
+  </select>
   <div class="cv-srch"><span class="ic">⌕</span><input id="cv-q" placeholder="Search partner…" oninput="renderCRMView()"></div>
 </div>
 
@@ -1387,8 +1393,8 @@ document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
       <th>Category</th>
       <th>Partner</th>
       <th>Stage</th>
-      <th style="text-align:center;">Rooftops Live</th>
-      <th style="text-align:center;">Rooftops Blocked</th>
+      <th style="text-align:right;">ARR ($)</th>
+      <th style="text-align:center;">Rooftop Count</th>
       <th>Blocked On</th>
       <th>ETA</th>
       <th>Next Steps</th>
@@ -1532,40 +1538,22 @@ function cvCatRank(cat){
 }
 const CRM_ALL_CATS = [...new Set(CRM_VIEW.map(r=>r.cat))].sort((a,b)=> cvCatRank(a)-cvCatRank(b) || a.localeCompare(b));
 
-// ── Rooftops live vs blocked, per integration — cross-references the OB/CS
-// Tracker (the onboarding/live sheet) by tool name, scoped to the matching
-// CRM/DMS/IMS/Service field, same approach as the Blocker Board's rooftop
-// count. A rooftop counts as "live" if its own stage in the tracker is Live,
-// otherwise it's counted as "blocked" (still OB Initiated).
-const CV_TYPE_FIELD = {'Sales CRM':'crm','Service Scheduler':'svc','DMS':'dms','IMS':'ims'};
-const cvRooftopCache = {};
-function cvRooftopSplit(r){
-  const key = r.cat+'|'+r.name;
-  if(cvRooftopCache[key]) return cvRooftopCache[key];
-  const field = CV_TYPE_FIELD[r.cat];
-  let live=0, blocked=0;
-  if(field && typeof OBT_D!=='undefined' && typeof bbNorm==='function'){
-    const pn = bbNorm(r.name);
-    const firstTok = pn.split(' ')[0];
-    const seen = new Set();
-    OBT_D.forEach(row=>{
-      (row[field]||[]).forEach(it=>{
-        const tn = bbNorm(it.tool);
-        if(!tn) return;
-        const match = tn===pn || tn.includes(pn) || pn.includes(tn) || (firstTok.length>3 && tn.split(' ').includes(firstTok));
-        if(match){
-          const k = row.acct+'|'+row.rooftop;
-          if(!seen.has(k)){
-            seen.add(k);
-            if(row.stage==='Live') live++; else blocked++;
-          }
-        }
-      });
-    });
-  }
-  const result = {live, blocked, tracked: !!field};
-  cvRooftopCache[key] = result;
-  return result;
+// ── ARR + Rooftop Count, per integration — pulled directly from the Blocker
+// Board's own BB array and bbRooftopsFor() (not recomputed independently),
+// so the numbers here can never drift from what the Blocker Board shows.
+// BB only tracks non-live partners, so Completed partners here simply have
+// no match — that's expected, not a bug.
+const CRM_CAT_TO_BB_TYPE = {
+  'Sales CRM':'Sales CRM', 'Service Scheduler':'Service', 'DMS':'DMS', 'IMS':'IMS',
+  'Marketplaces':'Marketplaces', 'Website Providers':'Website', 'Payments':'Payments',
+  'Parts':'Parts', 'Catalog Management':'Other', 'Vin Decoding':'VIN',
+};
+function cvBBMatch(r){
+  const bbType = CRM_CAT_TO_BB_TYPE[r.cat];
+  const pn = bbNorm(r.name);
+  let match = BB.find(b => bbNorm(b.n)===pn && (!bbType || b.t===bbType));
+  if(!match) match = BB.find(b => bbNorm(b.n)===pn);
+  return match || null;
 }
 
 function cvFilterStage(s, el){
@@ -1603,7 +1591,18 @@ function renderCRMView(){
   else if(cv_blocked!=='all') d = d.filter(r=>r.blocked===cv_blocked);
   if(q) d = d.filter(r=>r.name.toLowerCase().includes(q) || r.cat.toLowerCase().includes(q));
 
-  d = [...d].sort((a,b)=> cvCatRank(a.cat)-cvCatRank(b.cat) || a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
+  const cvSort = (document.getElementById('cv-sort')||{}).value || 'default';
+  if(cvSort==='arr'){
+    d = [...d].sort((a,b)=> ((cvBBMatch(b)||{}).arr||0)-((cvBBMatch(a)||{}).arr||0));
+  } else if(cvSort==='rooftops'){
+    d = [...d].sort((a,b)=>{
+      const ma=cvBBMatch(a), mb=cvBBMatch(b);
+      const ra = ma?bbRooftopsFor(ma).length:0, rb = mb?bbRooftopsFor(mb).length:0;
+      return rb-ra;
+    });
+  } else {
+    d = [...d].sort((a,b)=> cvCatRank(a.cat)-cvCatRank(b.cat) || a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
+  }
 
   document.getElementById('cv-caption').textContent =
     (cv_stage!=='all' ? cv_stage+' · ' : '') +
@@ -1615,15 +1614,16 @@ function renderCRMView(){
     const blBadge = r.blocked==='Partner' ? '<span class="bl-partner">Partner</span>'
       : r.blocked==='Spyne' ? '<span class="bl-spyne">Spyne</span>'
       : '<span class="bl-none">—</span>';
-    const rt = cvRooftopSplit(r);
-    const liveCell = rt.tracked ? `<span style="font-weight:800;color:${rt.live?'#15803d':'#9ca3af'};">${rt.live}</span>` : '<span class="cv-dash">—</span>';
-    const blockedCell = rt.tracked ? `<span style="font-weight:800;color:${rt.blocked?'#b91c1c':'#9ca3af'};">${rt.blocked}</span>` : '<span class="cv-dash">—</span>';
+    const bbMatch = cvBBMatch(r);
+    const arrCell = bbMatch ? `<span style="font-weight:800;color:#b91c1c;">${fmtEV(bbMatch.arr)}</span>` : (r.stage==='Completed' ? '<span style="color:#15803d;font-weight:700;">Live</span>' : '<span class="cv-dash">—</span>');
+    const rooftopCount = bbMatch ? bbRooftopsFor(bbMatch).length : 0;
+    const rtCell = bbMatch ? `<span style="font-weight:800;color:${rooftopCount?'#1d4ed8':'#9ca3af'};">${rooftopCount}</span>` : '<span class="cv-dash">—</span>';
     return `<tr>
       <td class="cv-cat-tag">${r.cat}</td>
       <td style="font-weight:700;font-size:12.5px;">${r.name}</td>
       <td><span class="cv-stage-badge" style="background:${col.bg};color:${col.fg};">${r.stage}</span></td>
-      <td style="text-align:center;">${liveCell}</td>
-      <td style="text-align:center;">${blockedCell}</td>
+      <td style="text-align:right;">${arrCell}</td>
+      <td style="text-align:center;">${rtCell}</td>
       <td>${blBadge}</td>
       <td style="font-size:11.5px;color:#6b7280;">${r.eta || '<span class="cv-dash">—</span>'}</td>
       <td class="cv-next">${r.next || '<span class="cv-dash">—</span>'}</td>
