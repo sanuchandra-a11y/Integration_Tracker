@@ -1365,12 +1365,17 @@ document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
 <div class="cv-filters">
   <span style="font-size:11px;color:#4b5563;font-weight:600;">Category:</span>
   <select id="cv-cat" class="cv-sel" onchange="renderCRMView()"><option value="all">All</option></select>
-  <span style="font-size:11px;color:#4b5563;font-weight:600;">Blocked On:</span>
+  <span style="font-size:11px;color:#4b5563;font-weight:600;">Status:</span>
   <select id="cv-blocked" class="cv-sel" onchange="renderCRMView()">
     <option value="all">All</option>
-    <option value="Partner">Partner</option>
-    <option value="Spyne">Spyne</option>
-    <option value="none">Unblocked</option>
+    <optgroup label="Blocked On">
+      <option value="Partner">Partner</option>
+      <option value="Spyne">Spyne</option>
+    </optgroup>
+    <optgroup label="Stage">
+      <option value="stage-blocked">Blocked (not yet Completed)</option>
+      <option value="stage-completed">Completed</option>
+    </optgroup>
   </select>
   <span style="font-size:11px;color:#4b5563;font-weight:600;">Sort by:</span>
   <select id="cv-sort" class="cv-sel" onchange="renderCRMView()">
@@ -1587,7 +1592,8 @@ function renderCRMView(){
   let d = CRM_VIEW.filter(r=>true);
   if(cv_stage!=='all') d = d.filter(r=>r.stage===cv_stage);
   if(cv_cat!=='all') d = d.filter(r=>r.cat===cv_cat);
-  if(cv_blocked==='none') d = d.filter(r=>!r.blocked);
+  if(cv_blocked==='stage-completed') d = d.filter(r=>r.stage==='Completed');
+  else if(cv_blocked==='stage-blocked') d = d.filter(r=>r.stage!=='Completed');
   else if(cv_blocked!=='all') d = d.filter(r=>r.blocked===cv_blocked);
   if(q) d = d.filter(r=>r.name.toLowerCase().includes(q) || r.cat.toLowerCase().includes(q));
 
