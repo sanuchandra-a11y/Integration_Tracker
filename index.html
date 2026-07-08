@@ -1401,7 +1401,7 @@ document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
 </div>
 
 <script>
-const CRM_STAGE_ORDER = ['Not Started','Reachout','Meeting Scheduled','Meeting Done','Business Discussion','Integration Testing','In Progress','Completed','Rejected'];
+const CRM_STAGE_ORDER = ['Completed','Integration Testing','In Progress','Business Discussion','Meeting Done','Meeting Scheduled','Reachout','Not Started','Rejected'];
 const CRM_STAGE_COLOR = {
   'Not Started':        {fg:'#6b7280', bg:'#f3f4f6'},
   'Reachout':            {fg:'#475569', bg:'#f1f5f9'},
@@ -1525,7 +1525,12 @@ const CRM_VIEW = [
 ];
 
 let cv_stage = 'all', cv_cat = 'all', cv_blocked = 'all';
-const CRM_ALL_CATS = [...new Set(CRM_VIEW.map(r=>r.cat))].sort();
+const CRM_CAT_PRIORITY = ['Sales CRM','Service Scheduler','DMS','IMS'];
+function cvCatRank(cat){
+  const i = CRM_CAT_PRIORITY.indexOf(cat);
+  return i===-1 ? CRM_CAT_PRIORITY.length : i;
+}
+const CRM_ALL_CATS = [...new Set(CRM_VIEW.map(r=>r.cat))].sort((a,b)=> cvCatRank(a)-cvCatRank(b) || a.localeCompare(b));
 
 function cvFilterStage(s, el){
   cv_stage = (cv_stage===s) ? 'all' : s;
@@ -1562,7 +1567,7 @@ function renderCRMView(){
   else if(cv_blocked!=='all') d = d.filter(r=>r.blocked===cv_blocked);
   if(q) d = d.filter(r=>r.name.toLowerCase().includes(q) || r.cat.toLowerCase().includes(q));
 
-  d = [...d].sort((a,b)=> a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
+  d = [...d].sort((a,b)=> cvCatRank(a.cat)-cvCatRank(b.cat) || a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
 
   document.getElementById('cv-caption').textContent =
     (cv_stage!=='all' ? cv_stage+' · ' : '') +
