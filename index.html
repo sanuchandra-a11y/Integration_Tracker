@@ -313,11 +313,11 @@ td{padding:9px 11px;font-size:12px;vertical-align:middle;}
         <th onclick="sortBB('name')">System Provider ↕</th>
         <th onclick="sortBB('type')">Type ↕</th>
         <th onclick="sortBB('arr')" style="text-align:right">ARR ($) ↓</th>
+        <th onclick="sortBB('rooftops')" style="text-align:center;">Rooftop Number ↕</th>
         <th onclick="sortBB('stage')">Current Stage ↕</th>
         <th onclick="sortBB('entered')">Stage Since ↕</th>
         <th onclick="sortBB('eta')">ETA ↕</th>
         <th onclick="sortBB('time')">Time in Stage ↕</th>
-        <th onclick="sortBB('rooftops')" style="text-align:center;">Rooftops Pending ↕</th>
         <th>Roadblock Reason</th>
         <th style="width:140px;text-align:center;">Blocked At</th>
       </tr></thead>
@@ -1272,11 +1272,11 @@ function renderBB(){
       <td style="font-weight:800;">${r.n}</td>
       <td style="color:${tColor};font-weight:700;font-size:11px;">${r.t}</td>
       <td style="text-align:right;font-weight:800;">${fmtEV(r.arr)}</td>
+      <td style="text-align:center;">${rtCell}</td>
       <td><span class="${stageInfo.cls}" style="padding:3px 10px;font-size:10.5px;font-weight:700;display:inline-block;">${stageInfo.l}</span></td>
       <td style="font-size:11px;color:#6b7280;">${r.en || '—'}</td>
       <td style="font-size:11px;color:#6b7280;">${r.eta || '—'}</td>
       <td style="font-size:11px;color:#6b7280;">${r.time || '—'}</td>
-      <td style="text-align:center;">${rtCell}</td>
       <td style="font-size:11.5px;color:#4b5563;max-width:280px;">${r.road || ''}</td>
       <td style="text-align:center;">${blInfo ? `<span class="blt ${blInfo.cls}">${blInfo.l}</span>` : '—'}</td>
     </tr>`;
@@ -6420,14 +6420,12 @@ function renderOBTFieldPct(){
 
 function renderOBTGaps(){
   const all=OBT_D;
-  const gaps=all.filter(r=>obtGap(r)).length;
   const liveCount=all.filter(r=>r.stage==='Live').length;
   const obCount=all.filter(r=>r.stage==='OB Initiated').length;
   document.getElementById('obt-gaps').innerHTML=`
     <div class="obt-gc"><div class="v" style="color:#111827;">${all.length}</div><div class="l">Total rooftops</div></div>
     <div class="obt-gc"><div class="v" style="color:#15803d;">${liveCount}</div><div class="l">Live</div></div>
-    <div class="obt-gc"><div class="v" style="color:#1d4ed8;">${obCount}</div><div class="l">OB Initiated</div></div>
-    <div class="obt-gc"><div class="v" style="color:#b91c1c;">${gaps}</div><div class="l">⚠ No integration data</div></div>`;
+    <div class="obt-gc"><div class="v" style="color:#1d4ed8;">${obCount}</div><div class="l">OB Initiated</div></div>`;
 }
 
 function renderOBTBanner(){
