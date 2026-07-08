@@ -1377,12 +1377,6 @@ document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
       <option value="stage-completed">Completed</option>
     </optgroup>
   </select>
-  <span style="font-size:11px;color:#4b5563;font-weight:600;">Sort by:</span>
-  <select id="cv-sort" class="cv-sel" onchange="renderCRMView()">
-    <option value="default">Category (default)</option>
-    <option value="arr">ARR — highest first</option>
-    <option value="rooftops">Rooftop Count — highest first</option>
-  </select>
   <div class="cv-srch"><span class="ic">⌕</span><input id="cv-q" placeholder="Search partner…" oninput="renderCRMView()"></div>
 </div>
 
@@ -1390,18 +1384,18 @@ document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
 <div class="tw">
   <div class="th2">
     <div class="tt" id="cv-caption">All partners · CRM View tracker</div>
-    <div class="tn">Click a stage card above to filter · Source: CRM_View_for_CEO sheet</div>
+    <div class="tn">Click a stage card above to filter, or a column header to sort · Source: CRM_View_for_CEO sheet</div>
   </div>
   <div style="overflow-x:auto;">
   <table>
     <thead><tr>
-      <th>Category</th>
-      <th>Partner</th>
-      <th>Stage</th>
-      <th style="text-align:right;">ARR ($)</th>
-      <th style="text-align:center;">Rooftop Count</th>
-      <th>Blocked On</th>
-      <th>ETA</th>
+      <th onclick="sortCV('cat')">Category ↕</th>
+      <th onclick="sortCV('name')">Partner ↕</th>
+      <th onclick="sortCV('stage')">Stage ↕</th>
+      <th onclick="sortCV('arr')" style="text-align:right">ARR ($) ↕</th>
+      <th onclick="sortCV('rooftops')" style="text-align:center;">Rooftop Count ↕</th>
+      <th onclick="sortCV('blocked')">Blocked On ↕</th>
+      <th onclick="sortCV('eta')">ETA ↕</th>
       <th>Next Steps</th>
       <th>Last Activity</th>
     </tr></thead>
@@ -1536,6 +1530,16 @@ const CRM_VIEW = [
 ];
 
 let cv_stage = 'all', cv_cat = 'all', cv_blocked = 'all';
+let cv_sortField = 'cat', cv_sortDir = 1;
+function sortCV(field){
+  if(cv_sortField === field){
+    cv_sortDir = -cv_sortDir;
+  } else {
+    cv_sortField = field;
+    cv_sortDir = (field==='arr' || field==='rooftops') ? -1 : 1;
+  }
+  renderCRMView();
+}
 const CRM_CAT_PRIORITY = ['Sales CRM','Service Scheduler','DMS','IMS'];
 function cvCatRank(cat){
   const i = CRM_CAT_PRIORITY.indexOf(cat);
@@ -1597,18 +1601,23 @@ function renderCRMView(){
   else if(cv_blocked!=='all') d = d.filter(r=>r.blocked===cv_blocked);
   if(q) d = d.filter(r=>r.name.toLowerCase().includes(q) || r.cat.toLowerCase().includes(q));
 
-  const cvSort = (document.getElementById('cv-sort')||{}).value || 'default';
-  if(cvSort==='arr'){
-    d = [...d].sort((a,b)=> ((cvBBMatch(b)||{}).arr||0)-((cvBBMatch(a)||{}).arr||0));
-  } else if(cvSort==='rooftops'){
-    d = [...d].sort((a,b)=>{
+  d = [...d].sort((a,b)=>{
+    if(cv_sortField==='cat') return cv_sortDir*(cvCatRank(a.cat)-cvCatRank(b.cat)) || a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name);
+    if(cv_sortField==='name') return cv_sortDir*a.name.localeCompare(b.name);
+    if(cv_sortField==='stage') return cv_sortDir*(CRM_STAGE_ORDER.indexOf(a.stage)-CRM_STAGE_ORDER.indexOf(b.stage));
+    if(cv_sortField==='arr'){
+      const av=(cvBBMatch(a)||{}).arr||0, bv=(cvBBMatch(b)||{}).arr||0;
+      return cv_sortDir*(av-bv);
+    }
+    if(cv_sortField==='rooftops'){
       const ma=cvBBMatch(a), mb=cvBBMatch(b);
-      const ra = ma?bbRooftopsFor(ma).length:0, rb = mb?bbRooftopsFor(mb).length:0;
-      return rb-ra;
-    });
-  } else {
-    d = [...d].sort((a,b)=> cvCatRank(a.cat)-cvCatRank(b.cat) || a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name));
-  }
+      const av = ma?bbRooftopsFor(ma).length:0, bv = mb?bbRooftopsFor(mb).length:0;
+      return cv_sortDir*(av-bv);
+    }
+    if(cv_sortField==='blocked') return cv_sortDir*((a.blocked||'').localeCompare(b.blocked||''));
+    if(cv_sortField==='eta') return cv_sortDir*((a.eta||'').localeCompare(b.eta||''));
+    return 0;
+  });
 
   document.getElementById('cv-caption').textContent =
     (cv_stage!=='all' ? cv_stage+' · ' : '') +
