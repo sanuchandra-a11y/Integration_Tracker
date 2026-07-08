@@ -317,6 +317,7 @@ td{padding:9px 11px;font-size:12px;vertical-align:middle;}
         <th onclick="sortBB('entered')">Stage Since ↕</th>
         <th onclick="sortBB('eta')">ETA ↕</th>
         <th onclick="sortBB('time')">Time in Stage ↕</th>
+        <th onclick="sortBB('rooftops')" style="text-align:center;">Rooftops Pending ↕</th>
         <th>Roadblock Reason</th>
         <th style="width:140px;text-align:center;">Blocked At</th>
       </tr></thead>
@@ -1200,6 +1201,39 @@ function bbTypeMatch(r, t){
   return true;
 }
 
+// ── Rooftops pending — cross-references each Blocker Board partner against the
+// OB/CS Tracker (by tool name, scoped to the matching CRM/DMS/IMS/Service field)
+// so the count reflects real accounts waiting on that integration, not a guess.
+const BB_TYPE_FIELD = {'Sales CRM':'crm','DMS':'dms','IMS':'ims','Service':'svc'};
+function bbNorm(s){
+  return (s||'').toLowerCase().replace(/\(.*?\)/g,' ').replace(/[^a-z0-9]+/g,' ').trim();
+}
+const bbRooftopCache = {};
+function bbRooftopsFor(r){
+  const key = r.t+'|'+r.n;
+  if(bbRooftopCache[key]) return bbRooftopCache[key];
+  const field = BB_TYPE_FIELD[r.t];
+  let rooftops = [];
+  if(field && typeof OBT_D!=='undefined'){
+    const pn = bbNorm(r.n);
+    const firstTok = pn.split(' ')[0];
+    const seen = new Set();
+    OBT_D.forEach(row=>{
+      (row[field]||[]).forEach(it=>{
+        const tn = bbNorm(it.tool);
+        if(!tn) return;
+        const match = tn===pn || tn.includes(pn) || pn.includes(tn) || (firstTok.length>3 && tn.split(' ').includes(firstTok));
+        if(match){
+          const k = row.acct+'|'+row.rooftop;
+          if(!seen.has(k)){ seen.add(k); rooftops.push({acct:row.acct, rooftop:row.rooftop}); }
+        }
+      });
+    });
+  }
+  bbRooftopCache[key] = rooftops;
+  return rooftops;
+}
+
 function renderBB(){
   const q = (document.getElementById('bb-search').value || '').toLowerCase();
   let d = BB.filter(r => bbTypeMatch(r, bb_type));
@@ -1215,6 +1249,7 @@ function renderBB(){
     if(bb_sortField==='entered'){ av=a.en||''; bv=b.en||''; return bb_sortDir*av.localeCompare(bv); }
     if(bb_sortField==='eta'){ av=a.eta||''; bv=b.eta||''; return bb_sortDir*av.localeCompare(bv); }
     if(bb_sortField==='time'){ av=a.time||''; bv=b.time||''; return bb_sortDir*av.localeCompare(bv); }
+    if(bb_sortField==='rooftops'){ return bb_sortDir*(bbRooftopsFor(a).length-bbRooftopsFor(b).length); }
     return 0;
   });
 
@@ -1227,6 +1262,11 @@ function renderBB(){
     const stageInfo = smap[r.s] || {cls:'',l:r.s};
     const blInfo = blMap[r.bl];
     const tColor = typeColor[r.t] || '#4b5563';
+    const rooftops = bbRooftopsFor(r);
+    const rtTitle = rooftops.length ? rooftops.map(x=>x.acct+' — '+x.rooftop).join('\n') : 'No live rooftop currently mapped to this partner in the OB/CS Tracker';
+    const rtCell = BB_TYPE_FIELD[r.t]
+      ? `<span title="${rtTitle.replace(/"/g,'&quot;')}" style="font-weight:800;color:${rooftops.length?'#1d4ed8':'#9ca3af'};cursor:${rooftops.length?'help':'default'};">${rooftops.length}</span>`
+      : '<span style="color:#9ca3af;">—</span>';
     return `<tr>
       <td></td>
       <td style="font-weight:800;">${r.n}</td>
@@ -1236,6 +1276,7 @@ function renderBB(){
       <td style="font-size:11px;color:#6b7280;">${r.en || '—'}</td>
       <td style="font-size:11px;color:#6b7280;">${r.eta || '—'}</td>
       <td style="font-size:11px;color:#6b7280;">${r.time || '—'}</td>
+      <td style="text-align:center;">${rtCell}</td>
       <td style="font-size:11.5px;color:#4b5563;max-width:280px;">${r.road || ''}</td>
       <td style="text-align:center;">${blInfo ? `<span class="blt ${blInfo.cls}">${blInfo.l}</span>` : '—'}</td>
     </tr>`;
@@ -2392,7 +2433,13 @@ const OBT_D = [
         "src": "vini"
       }
     ],
-    "dms": [],
+    "dms": [
+      {
+        "tool": "CDK",
+        "status": "",
+        "src": "vini-integration-data"
+      }
+    ],
     "ims": [
       {
         "tool": "vAuto",
@@ -2535,7 +2582,7 @@ const OBT_D = [
     "website": "http://capitalchevrolet.com/",
     "obPoc": "",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
@@ -2724,7 +2771,7 @@ const OBT_D = [
     "website": "",
     "obPoc": "",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
@@ -2736,7 +2783,7 @@ const OBT_D = [
     "website": "",
     "obPoc": "",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
@@ -2850,7 +2897,7 @@ const OBT_D = [
     "website": "",
     "obPoc": "Ritika",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
@@ -3185,7 +3232,13 @@ const OBT_D = [
         "src": "metabase"
       }
     ],
-    "dms": [],
+    "dms": [
+      {
+        "tool": "Tekion",
+        "status": "",
+        "src": "vini-integration-data"
+      }
+    ],
     "ims": [
       {
         "tool": "Vincue",
@@ -3200,7 +3253,7 @@ const OBT_D = [
     "website": "",
     "obPoc": "Tushar",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [
       {
         "tool": "VinSolutions",
@@ -3547,7 +3600,7 @@ const OBT_D = [
     "website": "",
     "obPoc": "Puneet",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [
       {
         "tool": "Elead",
@@ -3653,7 +3706,7 @@ const OBT_D = [
     "website": "",
     "obPoc": "Tushar",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [
       {
         "tool": "DriveCentric",
@@ -3741,7 +3794,13 @@ const OBT_D = [
     "obPoc": "",
     "csPoc": "Ankur",
     "stage": "Live",
-    "crm": [],
+    "crm": [
+      {
+        "tool": "CDK",
+        "status": "",
+        "src": "vini-integration-data"
+      }
+    ],
     "svc": [
       {
         "tool": "CDK Service",
@@ -3848,7 +3907,7 @@ const OBT_D = [
     "website": "https://www.lambertbuickgmc.com/",
     "obPoc": "",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
@@ -3881,7 +3940,13 @@ const OBT_D = [
       }
     ],
     "dms": [],
-    "ims": []
+    "ims": [
+      {
+        "tool": "VAuto",
+        "status": "",
+        "src": "vini-integration-data"
+      }
+    ]
   },
   {
     "acct": "Lucki Mazda",
@@ -4177,7 +4242,7 @@ const OBT_D = [
     "website": "https://www.nextgearmotors.com/",
     "obPoc": "",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
@@ -4265,7 +4330,7 @@ const OBT_D = [
     "website": "http://northendmotors.com/",
     "obPoc": "",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
@@ -5240,7 +5305,7 @@ const OBT_D = [
     "website": "http://www.svgmotors.com/",
     "obPoc": "Puneet",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
@@ -5478,7 +5543,7 @@ const OBT_D = [
     "website": "",
     "obPoc": "Avinash",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
@@ -5597,7 +5662,7 @@ const OBT_D = [
     "website": "",
     "obPoc": "",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
@@ -5624,7 +5689,13 @@ const OBT_D = [
         "src": "metabase"
       }
     ],
-    "dms": [],
+    "dms": [
+      {
+        "tool": "Tekion",
+        "status": "",
+        "src": "vini-integration-data"
+      }
+    ],
     "ims": [
       {
         "tool": "vAuto",
@@ -5654,7 +5725,13 @@ const OBT_D = [
         "src": "metabase"
       }
     ],
-    "dms": [],
+    "dms": [
+      {
+        "tool": "Tekion",
+        "status": "",
+        "src": "vini-integration-data"
+      }
+    ],
     "ims": [
       {
         "tool": "vAuto",
@@ -5684,7 +5761,13 @@ const OBT_D = [
         "src": "metabase"
       }
     ],
-    "dms": [],
+    "dms": [
+      {
+        "tool": "Tekion",
+        "status": "",
+        "src": "vini-integration-data"
+      }
+    ],
     "ims": [
       {
         "tool": "vAuto",
@@ -6196,19 +6279,18 @@ const OBT_D = [
     ]
   },
   {
-    "acct": "⁠Impex Auto Sales",
-    "rooftop": "⁠Impex Auto Sales",
+    "acct": "â Impex Auto Sales",
+    "rooftop": "â Impex Auto Sales",
     "website": "",
     "obPoc": "",
     "csPoc": "",
-    "stage": "",
+    "stage": "OB Initiated",
     "crm": [],
     "svc": [],
     "dms": [],
     "ims": []
   }
 ];
-
 const OBT_ALL_POC = [...new Set(OBT_D.map(r=>r.obPoc).filter(Boolean))].sort();
 const OBT_ALL_CSPOC = [...new Set(OBT_D.map(r=>r.csPoc).filter(Boolean))].sort();
 
