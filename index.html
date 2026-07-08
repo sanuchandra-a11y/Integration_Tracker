@@ -1356,9 +1356,7 @@ document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
 .cv-dash{color:#c9ccd2;}
 </style>
 
-<div class="cv-eyebrow"><span>Integration Program Office · CEO Review</span><span class="cm">v6.0 · CRM View — CRM_View_for_CEO sheet</span></div>
-<div class="cv-h1">Integration CRM View</div>
-<div class="cv-sub">Every partner's real pipeline stage, straight from the CRM View tracker — <strong>Stage</strong>, who it's <strong>Blocked On</strong>, the <strong>ETA</strong>, <strong>Next Steps</strong>, and the <strong>Last Activity</strong> logged. Click a stage below to filter.</div>
+<div class="cv-h1">Integration View</div>
 
 <!-- STAGE SUMMARY STRIP -->
 <div class="cv-strip" id="cv-strip"></div>
@@ -1389,6 +1387,8 @@ document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
       <th>Category</th>
       <th>Partner</th>
       <th>Stage</th>
+      <th style="text-align:center;">Rooftops Live</th>
+      <th style="text-align:center;">Rooftops Blocked</th>
       <th>Blocked On</th>
       <th>ETA</th>
       <th>Next Steps</th>
@@ -1532,6 +1532,42 @@ function cvCatRank(cat){
 }
 const CRM_ALL_CATS = [...new Set(CRM_VIEW.map(r=>r.cat))].sort((a,b)=> cvCatRank(a)-cvCatRank(b) || a.localeCompare(b));
 
+// ── Rooftops live vs blocked, per integration — cross-references the OB/CS
+// Tracker (the onboarding/live sheet) by tool name, scoped to the matching
+// CRM/DMS/IMS/Service field, same approach as the Blocker Board's rooftop
+// count. A rooftop counts as "live" if its own stage in the tracker is Live,
+// otherwise it's counted as "blocked" (still OB Initiated).
+const CV_TYPE_FIELD = {'Sales CRM':'crm','Service Scheduler':'svc','DMS':'dms','IMS':'ims'};
+const cvRooftopCache = {};
+function cvRooftopSplit(r){
+  const key = r.cat+'|'+r.name;
+  if(cvRooftopCache[key]) return cvRooftopCache[key];
+  const field = CV_TYPE_FIELD[r.cat];
+  let live=0, blocked=0;
+  if(field && typeof OBT_D!=='undefined' && typeof bbNorm==='function'){
+    const pn = bbNorm(r.name);
+    const firstTok = pn.split(' ')[0];
+    const seen = new Set();
+    OBT_D.forEach(row=>{
+      (row[field]||[]).forEach(it=>{
+        const tn = bbNorm(it.tool);
+        if(!tn) return;
+        const match = tn===pn || tn.includes(pn) || pn.includes(tn) || (firstTok.length>3 && tn.split(' ').includes(firstTok));
+        if(match){
+          const k = row.acct+'|'+row.rooftop;
+          if(!seen.has(k)){
+            seen.add(k);
+            if(row.stage==='Live') live++; else blocked++;
+          }
+        }
+      });
+    });
+  }
+  const result = {live, blocked, tracked: !!field};
+  cvRooftopCache[key] = result;
+  return result;
+}
+
 function cvFilterStage(s, el){
   cv_stage = (cv_stage===s) ? 'all' : s;
   renderCRMView();
@@ -1579,10 +1615,15 @@ function renderCRMView(){
     const blBadge = r.blocked==='Partner' ? '<span class="bl-partner">Partner</span>'
       : r.blocked==='Spyne' ? '<span class="bl-spyne">Spyne</span>'
       : '<span class="bl-none">—</span>';
+    const rt = cvRooftopSplit(r);
+    const liveCell = rt.tracked ? `<span style="font-weight:800;color:${rt.live?'#15803d':'#9ca3af'};">${rt.live}</span>` : '<span class="cv-dash">—</span>';
+    const blockedCell = rt.tracked ? `<span style="font-weight:800;color:${rt.blocked?'#b91c1c':'#9ca3af'};">${rt.blocked}</span>` : '<span class="cv-dash">—</span>';
     return `<tr>
       <td class="cv-cat-tag">${r.cat}</td>
       <td style="font-weight:700;font-size:12.5px;">${r.name}</td>
       <td><span class="cv-stage-badge" style="background:${col.bg};color:${col.fg};">${r.stage}</span></td>
+      <td style="text-align:center;">${liveCell}</td>
+      <td style="text-align:center;">${blockedCell}</td>
       <td>${blBadge}</td>
       <td style="font-size:11.5px;color:#6b7280;">${r.eta || '<span class="cv-dash">—</span>'}</td>
       <td class="cv-next">${r.next || '<span class="cv-dash">—</span>'}</td>
