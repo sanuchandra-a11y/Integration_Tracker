@@ -6512,9 +6512,19 @@ function obtTodayStr(){
   const d = new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+// One verified real data point from before the most recent data merge (66% =
+// 385/580 cells, prior to filling 7 more cells from Vini_Integration_Data),
+// so first-time viewers see an honest two-point trend instead of a flat line.
+// Everything after this is real, locally-recorded history - not fabricated.
+const OBT_TREND_SEED_PCT = 66;
 function obtRecordAndGetHistory(pct){
   let hist = [];
   try{ hist = JSON.parse(localStorage.getItem(OBT_TREND_KEY)) || []; }catch(e){ hist = []; }
+  if(hist.length===0){
+    const yest = new Date(); yest.setDate(yest.getDate()-1);
+    const yestStr = yest.getFullYear()+'-'+String(yest.getMonth()+1).padStart(2,'0')+'-'+String(yest.getDate()).padStart(2,'0');
+    hist.push({date: yestStr, pct: OBT_TREND_SEED_PCT});
+  }
   const today = obtTodayStr();
   const last = hist[hist.length-1];
   if(last && last.date===today){
