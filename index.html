@@ -69,22 +69,22 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .tt{font-size:13px;font-weight:600;}
 .tn{font-size:11px;color:var(--muted);}
 table{width:100%;border-collapse:collapse;}
-thead th{padding:8px 11px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;}
+thead th{padding:8px 11px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;cursor:pointer;user-select:none;}
 thead th:hover{color:var(--text);}
 th.r{text-align:right;}
 tbody tr{border-bottom:1px solid #21262d;transition:background .1s;}
 tbody tr:hover{background:var(--bg3);}
 tbody tr:last-child{border-bottom:none;}
-td{padding:9px 11px;font-size:12px;vertical-align:middle;}
-.rank{color:var(--muted);font-size:10px;width:24px;}
-.pname{font-weight:700;font-size:13px;}
-.ptype{font-size:10px;}
-.tarr{font-weight:800;color:#15803d;text-align:right;font-size:13px;white-space:nowrap;}
+td{padding:9px 11px;font-size:13.5px;vertical-align:middle;}
+.rank{color:var(--muted);font-size:11px;width:24px;}
+.pname{font-weight:700;font-size:14.5px;}
+.ptype{font-size:11.5px;}
+.tarr{font-weight:800;color:#15803d;text-align:right;font-size:14.5px;white-space:nowrap;}
 .tr{text-align:right;}
-.tm{color:var(--muted);font-size:11px;}
-.tb{font-size:12px;line-height:1.6;color:#374151;max-width:260px;}
-.tu{font-size:11px;color:#0f766e;max-width:170px;line-height:1.4;font-weight:600;}
-.tpoc{font-size:11px;font-weight:600;white-space:nowrap;}
+.tm{color:var(--muted);font-size:12.5px;}
+.tb{font-size:13.5px;line-height:1.6;color:#374151;max-width:260px;}
+.tu{font-size:12.5px;color:#0f766e;max-width:170px;line-height:1.4;font-weight:600;}
+.tpoc{font-size:12.5px;font-weight:600;white-space:nowrap;}
 
 /* ── BADGES ── */
 .bg{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;}
@@ -1270,14 +1270,14 @@ function renderBB(){
     return `<tr>
       <td></td>
       <td style="font-weight:800;">${r.n}</td>
-      <td style="color:${tColor};font-weight:700;font-size:11px;">${r.t}</td>
+      <td style="color:${tColor};font-weight:700;font-size:12.5px;">${r.t}</td>
       <td style="text-align:right;font-weight:800;">${fmtEV(r.arr)}</td>
       <td style="text-align:center;">${rtCell}</td>
-      <td><span class="${stageInfo.cls}" style="padding:3px 10px;font-size:10.5px;font-weight:700;display:inline-block;">${stageInfo.l}</span></td>
-      <td style="font-size:11px;color:#6b7280;">${r.en || '—'}</td>
-      <td style="font-size:11px;color:#6b7280;">${r.eta || '—'}</td>
-      <td style="font-size:11px;color:#6b7280;">${r.time || '—'}</td>
-      <td style="font-size:11.5px;color:#4b5563;max-width:280px;">${r.road || ''}</td>
+      <td><span class="${stageInfo.cls}" style="padding:3px 10px;font-size:12px;font-weight:700;display:inline-block;">${stageInfo.l}</span></td>
+      <td style="font-size:12.5px;color:#6b7280;">${r.en || '—'}</td>
+      <td style="font-size:12.5px;color:#6b7280;">${r.eta || '—'}</td>
+      <td style="font-size:12.5px;color:#6b7280;">${r.time || '—'}</td>
+      <td style="font-size:13px;color:#4b5563;max-width:280px;">${r.road || ''}</td>
       <td style="text-align:center;">${blInfo ? `<span class="blt ${blInfo.cls}">${blInfo.l}</span>` : '—'}</td>
     </tr>`;
   }).join('');
@@ -1349,10 +1349,10 @@ document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
 .cv-srch{margin-left:auto;position:relative;}
 .cv-srch input{background:#fff;border:1px solid #d1d5db;border-radius:6px;color:#111827;font-size:12px;padding:5px 10px 5px 26px;width:200px;outline:none;}
 .cv-srch .ic{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:13px;}
-.cv-stage-badge{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;}
-.cv-cat-tag{font-size:9.5px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.03em;}
-.cv-next{font-size:11.5px;color:#374151;max-width:220px;}
-.cv-last{font-size:11.5px;color:#6b7280;max-width:200px;}
+.cv-stage-badge{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:700;white-space:nowrap;}
+.cv-cat-tag{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.03em;}
+.cv-next{font-size:13px;color:#374151;max-width:220px;}
+.cv-last{font-size:13px;color:#6b7280;max-width:200px;}
 .cv-dash{color:#c9ccd2;}
 </style>
 
@@ -1635,12 +1635,12 @@ function renderCRMView(){
     const rtCell = bbMatch ? `<span style="font-weight:800;color:${rooftopCount?'#1d4ed8':'#9ca3af'};">${rooftopCount}</span>` : '<span class="cv-dash">—</span>';
     return `<tr>
       <td class="cv-cat-tag">${r.cat}</td>
-      <td style="font-weight:700;font-size:12.5px;">${r.name}</td>
+      <td style="font-weight:700;font-size:14px;">${r.name}</td>
       <td><span class="cv-stage-badge" style="background:${col.bg};color:${col.fg};">${r.stage}</span></td>
       <td style="text-align:right;">${arrCell}</td>
       <td style="text-align:center;">${rtCell}</td>
       <td>${blBadge}</td>
-      <td style="font-size:11.5px;color:#6b7280;">${r.eta || '<span class="cv-dash">—</span>'}</td>
+      <td style="font-size:13px;color:#6b7280;">${r.eta || '<span class="cv-dash">—</span>'}</td>
       <td class="cv-next">${r.next || '<span class="cv-dash">—</span>'}</td>
       <td class="cv-last">${r.last || '<span class="cv-dash">—</span>'}</td>
     </tr>`;
@@ -1875,7 +1875,6 @@ function renderPricing(){
 <style>
 .obt-pg{max-width:100%;}
 .obt-h1{font-size:20px;font-weight:900;color:#111827;margin-bottom:3px;}
-.obt-sub{font-size:12px;color:#4b5563;margin-bottom:14px;line-height:1.6;}
 /* POC cards */
 .obt-cards{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
 .obt-card{background:#fff;border:1.5px solid #e5e7eb;border-radius:10px;padding:12px 14px;cursor:pointer;min-width:150px;flex:1;transition:border-color .15s;}
@@ -1927,14 +1926,13 @@ function renderPricing(){
 
 <div class="obt-pg">
   <div class="obt-h1">👥 OB/CS Integration Tracker</div>
-  <div class="obt-sub">
-    Cross-referenced from two sources: your <strong>Integration Tracker</strong> export (CS database + Metabase) and the <strong>Vini - Ob Raw</strong> sheet (Live / OB Initiated rooftops only — OB Drop, Sales Drop, and Churned accounts are excluded). Shows OB POC and CS POC ownership plus Sales CRM / Service Scheduler / DMS / IMS status, so you can ping the right person directly.
-    <span style="display:inline-flex;align-items:center;gap:4px;margin-left:4px;"><span class="it-y mb" style="margin:0;">example</span> = auto-pulled from Metabase</span>
-  </div>
   <div id="obt-fillbanner" style="border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;line-height:1.7;"></div>
 
   <!-- GAP STRIP -->
   <div class="obt-gaps" id="obt-gaps"></div>
+
+  <!-- DAILY FILL RATE TREND -->
+  <div id="obt-trend" style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px 18px;margin-bottom:14px;"></div>
 
   <!-- FIELD-WISE FILL PERCENTAGE -->
   <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 18px;margin-bottom:14px;">
@@ -6500,8 +6498,78 @@ function renderOBTFieldPct(){
       <div style="font-size:9px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.04em;margin-top:4px;">${c.label}</div>
       <div style="font-size:9px;color:#9ca3af;margin-top:2px;">${c.sub}</div>
     </div>`).join('');
+
+  obtRenderTrend(overallPct);
 }
 
+// ── Daily fill-rate trend — this file has no backend, so there's no real
+// history to plot yet. What we CAN do honestly is start recording today's
+// overall fill rate locally (this browser only) every time the tracker is
+// opened, then graph that as it accumulates day over day. It will only show
+// one point until tomorrow — that's expected, not a bug.
+const OBT_TREND_KEY = 'spyne_obt_fill_history';
+function obtTodayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function obtRecordAndGetHistory(pct){
+  let hist = [];
+  try{ hist = JSON.parse(localStorage.getItem(OBT_TREND_KEY)) || []; }catch(e){ hist = []; }
+  const today = obtTodayStr();
+  const last = hist[hist.length-1];
+  if(last && last.date===today){
+    last.pct = pct;
+  } else {
+    hist.push({date: today, pct: pct});
+  }
+  if(hist.length > 90) hist = hist.slice(-90);
+  try{ localStorage.setItem(OBT_TREND_KEY, JSON.stringify(hist)); }catch(e){}
+  return hist;
+}
+function obtRenderTrend(overallPct){
+  const el = document.getElementById('obt-trend');
+  if(!el) return;
+  const hist = obtRecordAndGetHistory(overallPct);
+
+  const w=560, h=90, pad=8;
+  let svg = '';
+  if(hist.length >= 2){
+    const vals = hist.map(p=>p.pct);
+    const min = Math.min(...vals,0), max = Math.max(...vals,100);
+    const xStep = (w-pad*2)/(hist.length-1);
+    const pts = hist.map((p,i)=>{
+      const x = pad + i*xStep;
+      const y = h-pad - ((p.pct-min)/((max-min)||1))*(h-pad*2);
+      return [x,y];
+    });
+    const line = pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+    const area = line + ` L${pts[pts.length-1][0].toFixed(1)},${h-pad} L${pts[0][0].toFixed(1)},${h-pad} Z`;
+    const dots = pts.map((p,i)=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3" fill="#1d4ed8"><title>${hist[i].date}: ${hist[i].pct}%</title></circle>`).join('');
+    svg = `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" preserveAspectRatio="none" style="display:block;">
+      <path d="${area}" fill="#dbeafe" opacity="0.5"/>
+      <path d="${line}" fill="none" stroke="#1d4ed8" stroke-width="2"/>
+      ${dots}
+    </svg>`;
+  }
+
+  const prev = hist.length>=2 ? hist[hist.length-2].pct : null;
+  const curr = hist[hist.length-1].pct;
+  const delta = prev!==null ? curr-prev : null;
+  const deltaHTML = delta===null
+    ? '<span style="color:#9ca3af;">First recorded reading — a trend line will appear from tomorrow onward.</span>'
+    : delta>0 ? `<span style="color:#15803d;font-weight:800;">▲ +${delta}%</span> vs last recorded (${hist[hist.length-2].date})`
+    : delta<0 ? `<span style="color:#b91c1c;font-weight:800;">▼ ${delta}%</span> vs last recorded (${hist[hist.length-2].date})`
+    : `<span style="color:#6b7280;font-weight:800;">No change</span> vs last recorded (${hist[hist.length-2].date})`;
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;">
+      <div style="font-size:12px;font-weight:700;color:#111827;">📈 Daily fill rate trend</div>
+      <div style="font-size:20px;font-weight:900;color:#111827;">${curr}%</div>
+    </div>
+    <div style="font-size:11px;color:#4b5563;margin-bottom:8px;">${deltaHTML}</div>
+    ${svg}
+    <div style="font-size:9.5px;color:#9ca3af;margin-top:6px;">Tracked locally in this browser, starting the day this reading was first recorded — not shared across devices or teammates.</div>`;
+}
 
 function renderOBTGaps(){
   const all=OBT_D;
