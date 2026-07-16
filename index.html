@@ -229,112 +229,80 @@ td{padding:9px 11px;font-size:13.5px;vertical-align:middle;}
 ══════════════════════════════════════════════════════ -->
 <div id="view-blockers" class="view active">
 
-  <div class="bb-header">
-    <div class="bb-eyebrow">
-      <span>Integration Program Office · Non-Live Partners Only · Updated daily from Integration Collaboration Sheet</span>
-      <span style="display:flex;align-items:center;gap:5px;"><span class="live-dot"></span> <span style="color:#4b5563;font-weight:900;">Jul 2, 2026</span></span>
-    </div>
-    <h1 class="bb-title">What is <span style="color:#b91c1c;font-weight:700;">blocked</span> and <span style="color:#92400e;font-weight:900;">since when</span>?</h1>
-    <p class="bb-sub" id="bb-sub-text">Non-live integration partners. Every row shows the stage, who owns the block, and what's needed to unlock it. Live partners are hidden — focus is 100% on what's not done yet. <strong>ARR shown = real per-account dependency from the OB/CS Tracker</strong>, not pipeline estimates — a partner with a completed integration is never counted as a blocker, even if individual accounts have separate CS/technical issues.</p>
+  <style>
+  .ft-overview{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+  .ft-ov-item{background:#fff;border:1px solid #e5e7eb;border-radius:9px;padding:10px 16px;flex:1;min-width:110px;text-align:center;}
+  .ft-ov-item .n{font-size:22px;font-weight:900;line-height:1;}
+  .ft-ov-item .l{font-size:10px;color:#6b7280;margin-top:3px;text-transform:uppercase;letter-spacing:.03em;}
+  .ft-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px;}
+  .ft-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s;}
+  .ft-card:hover,.ft-card.active{border-color:#2563eb;}
+  .ft-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .ft-card-name{font-size:12px;font-weight:700;color:#111827;display:flex;align-items:center;gap:5px;}
+  .ft-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
+  .ft-card-count{font-size:20px;font-weight:900;}
+  .ft-card-waiting{font-size:12.5px;font-weight:700;color:#111827;margin-bottom:2px;min-height:16px;}
+  .ft-card-meta{font-size:9.5px;color:#9ca3af;margin-bottom:8px;}
+  .ft-card-prob-lbl{font-size:9px;color:#9ca3af;margin-bottom:4px;}
+  .ft-card-prob-track{background:#f3f4f6;border-radius:4px;height:5px;overflow:hidden;margin-bottom:8px;}
+  .ft-card-prob-fill{height:100%;border-radius:4px;}
+  .ft-substage-chips{display:flex;flex-wrap:wrap;gap:4px;}
+  .ft-substage-chip{background:#f3f4f6;color:#4b5563;font-size:9.5px;font-weight:600;padding:3px 7px;border-radius:5px;}
+  .ft-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+  .ft-sel{padding:5px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;background:#fff;color:#111827;outline:none;}
+  .ft-clear{font-size:11px;color:#2563eb;cursor:pointer;font-weight:600;}
+  .ft-srch{margin-left:auto;position:relative;}
+  .ft-srch input{background:#fff;border:1px solid #d1d5db;border-radius:6px;color:#111827;font-size:12px;padding:5px 10px 5px 26px;width:200px;outline:none;}
+  .ft-srch .ic{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:13px;}
+  .ft-stage-badge{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+  .ft-edit{width:100%;border:1px solid transparent;background:transparent;font-size:12px;color:#111827;padding:3px 5px;border-radius:5px;font-family:inherit;}
+  .ft-edit:hover{border-color:#d1d5db;}
+  .ft-edit:focus{border-color:#2563eb;background:#fff;outline:none;}
+  .ft-dash{color:#c9ccd2;}
+  </style>
+
+  <div style="margin-bottom:14px;">
+    <div style="font-size:22px;font-weight:900;color:#111827;margin-bottom:2px;">Integrations</div>
+    <div style="font-size:12px;color:#6b7280;">Every non-live partner blocking ARR, why, and what's next. Source: Final Tracker (Shanu Chandra Integrations Collaboration sheet).</div>
   </div>
 
-  <!-- SUMMARY STRIP -->
-  <div class="strip">
-    <div class="scard active" onclick="filterBB('all',this)"><div class="n" style="color:#1a1d2e" id="cnt-all">—</div><div class="l">All non-live</div><div class="s" id="arr-all-bb">—</div></div>
-    <div class="scard" onclick="filterBB('dev',this)"><div class="n cb" id="cnt-dev">—</div><div class="l">In Dev</div><div class="s" id="arr-dev-bb">—</div></div>
-    <div class="scard" onclick="filterBB('biz',this)"><div class="n ca" id="cnt-biz">—</div><div class="l">MOU / Biz Disc.</div><div class="s" id="arr-biz-bb">—</div></div>
-    <div class="scard" onclick="filterBB('meet',this)"><div class="n cp2" id="cnt-meet">—</div><div class="l">Meeting Aligned</div><div class="s" id="arr-meet-bb">Met, no MOU yet</div></div>
-    <div class="scard" onclick="filterBB('reach',this)"><div class="n" style="color:#9d174d;font-weight:900;" id="cnt-reach">—</div><div class="l">Reachout Phase</div><div class="s" id="arr-reach-bb">Active outreach</div></div>
-    <div class="scard" onclick="filterBB('pend',this)"><div class="n cm" id="cnt-pend">—</div><div class="l">Not Yet Engaged</div><div class="s" id="arr-pend-bb">Needs immediate action</div></div>
+  <div class="ft-overview" id="ftb-overview"></div>
+  <div class="ft-cards" id="ftb-cards"></div>
+
+  <div class="ft-filters">
+    <span style="font-size:11px;color:#4b5563;font-weight:600;">Category:</span>
+    <select id="ftb-cat" class="ft-sel" onchange="ftOnControl('ftb')"><option value="all">All partners</option></select>
+    <span style="font-size:11px;color:#4b5563;font-weight:600;">Blocked On:</span>
+    <select id="ftb-blocked" class="ft-sel" onchange="ftOnControl('ftb')">
+      <option value="all">All</option>
+      <option value="Partner">Partner</option>
+      <option value="Spyne">Spyne</option>
+    </select>
+    <span class="ft-clear" onclick="FT_UI['ftb'].stage='all';renderFT('ftb');">← All stages</span>
+    <div class="ft-srch"><span class="ic">⌕</span><input id="ftb-q" placeholder="Search partner…" oninput="ftOnControl('ftb')"></div>
   </div>
 
-  <!-- ARR BANNER -->
-  <div class="arr-banner">
-    <div class="ab-item">
-      <div class="v" style="color:#b91c1c;font-weight:900;" id="ab-total-arr">—</div>
-      <div class="l">Total ARR blocked</div>
-      <div style="font-size:9px;color:#6b7280;margin-top:2px;" id="ab-total-sub">—</div>
-    </div>
-    <div class="ab-div"></div>
-    <div class="ab-item">
-      <div class="v" style="color:#1d4ed8;font-weight:900;" id="ab-dev-arr">—</div>
-      <div class="l">In Dev stage</div>
-      <div style="font-size:9px;color:#6b7280;margin-top:2px;" id="ab-dev-sub">—</div>
-    </div>
-    <div class="ab-div"></div>
-    <div class="ab-item">
-      <div class="v" style="color:#d97706;font-weight:900;" id="ab-biz-arr">—</div>
-      <div class="l">Biz / MOU stage</div>
-      <div style="font-size:9px;color:#6b7280;margin-top:2px;" id="ab-biz-sub">—</div>
-    </div>
-    <div class="ab-div"></div>
-    <div class="ab-item">
-      <div class="v" style="color:#db2777;font-weight:900;" id="ab-meet-arr">—</div>
-      <div class="l">Meeting stage</div>
-      <div style="font-size:9px;color:#6b7280;margin-top:2px;" id="ab-meet-sub">—</div>
-    </div>
-    <div class="ab-div"></div>
-    <div class="ab-item">
-      <div class="v" style="color:#6b7280;font-weight:900;" id="ab-pend-arr">—</div>
-      <div class="l">Not Engaged ARR</div>
-      <div style="font-size:9px;color:#6b7280;margin-top:2px;" id="ab-pend-sub">—</div>
-    </div>
-    <div class="ab-div"></div>
-    <div class="ab-item">
-      <div class="v" style="color:#15803d;font-weight:900;">33</div>
-      <div class="l">Live ✓ (excluded)</div>
-      <div style="font-size:9px;color:#6b7280;margin-top:2px;">Incl. vAuto, xTime, Elead, VinSolutions</div>
-    </div>
-  </div>
-
-  <!-- FILTERS -->
-  <div class="fbar">
-    <span class="fl">Type:</span>
-    <button class="fc active" style="color:var(--text)" onclick="filterType('all',this)">All</button>
-    <button class="fc" style="color:#1d4ed8;font-weight:900;" onclick="filterType('crm',this)">CRM</button>
-    <button class="fc" style="color:#92400e;font-weight:900;" onclick="filterType('dms',this)">DMS</button>
-    <button class="fc" style="color:#5b21b6;font-weight:900;" onclick="filterType('ims',this)">IMS</button>
-    <button class="fc" style="color:#15803d;font-weight:900;" onclick="filterType('service',this)">Service</button>
-    <button class="fc" style="color:#9d174d;font-weight:900;" onclick="filterType('website',this)">Website</button>
-    <button class="fc" style="color:#4b5563;font-weight:900;" onclick="filterType('other',this)">Other</button>
-    <div class="srch"><span class="sic">⌕</span><input class="si" id="bb-search" placeholder="Search partner…" oninput="renderBB()"></div>
-  </div>
-
-  <!-- BLOCKER TABLE — 10 col format from tracker sheet -->
   <div class="tw">
     <div class="th2">
-      <div class="tt" id="bb-table-caption">All non-live partners · direct from Integration Collaboration Sheet</div>
-      <div class="tn">Click any column header to sort · Sorted by ARR by default</div>
+      <div class="tt" id="ftb-caption">All partners</div>
+      <div class="tn">Click a stage card to filter, or a column header to sort · Next Steps is editable, saved in this browser</div>
     </div>
     <div style="overflow-x:auto;">
     <table>
       <thead><tr>
-        <th style="width:24px"></th>
-        <th onclick="sortBB('name')">System Provider ↕</th>
-        <th onclick="sortBB('type')">Type ↕</th>
-        <th onclick="sortBB('arr')" style="text-align:right">ARR ($) ↓</th>
-        <th onclick="sortBB('rooftops')" style="text-align:center;">Rooftop Number ↕</th>
-        <th onclick="sortBB('stage')">Current Stage ↕</th>
-        <th onclick="sortBB('entered')">Stage Since ↕</th>
-        <th onclick="sortBB('eta')">ETA ↕</th>
-        <th onclick="sortBB('time')">Time in Stage ↕</th>
-        <th>Roadblock Reason</th>
-        <th style="width:140px;text-align:center;">Blocked At</th>
+        <th>#</th>
+        <th onclick="ftSort('ftb','name')">Partner ↕</th>
+        <th onclick="ftSort('ftb','stage')">Substage ↕</th>
+        <th onclick="ftSort('ftb','arr')" style="text-align:right;">ARR at stake ↕</th>
+        <th onclick="ftSort('ftb','rooftops')" style="text-align:center;">Rooftops ↕</th>
+        <th style="text-align:center;">Groups</th>
+        <th onclick="ftSort('ftb','days')" style="text-align:center;">Days stuck ↕</th>
+        <th>Blocked · Why</th>
+        <th>Next steps</th>
       </tr></thead>
-      <tbody id="bb-tbody"></tbody>
+      <tbody id="ftb-tbody"></tbody>
     </table>
     </div>
-  </div>
-  <div style="font-size:10px;color:var(--muted);padding:10px 0 0;display:flex;align-items:center;gap:8px;">
-    📊 Source: <a href="https://docs.google.com/spreadsheets/d/1Pxso_ytVnLYzOm3RPjLpKHSheNmCABTJ2jF5rZqS3sQ" target="_blank" style="color:var(--blue)">Integration Collaboration Sheet</a> &nbsp;·&nbsp;
-    <span style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:4px;">
-      <span class="blt blt-sd">Spyne — Dev Team</span>
-      <span class="blt blt-sc">Spyne — Commercial</span>
-      <span class="blt blt-sa">Spyne — Agreement</span>
-      <span class="blt blt-pd">Partner — Dev Team</span>
-      <span class="blt blt-pc">Partner — Commercial</span>
-      <span class="blt blt-pa">Partner — Agreement</span>
-    </span>
   </div>
 </div>
 
@@ -1161,44 +1129,320 @@ const blMap={
 };
 const typeColor={'Sales CRM':'#1d4ed8','DMS':'#92400e','IMS':'#5b21b6','Service':'#15803d','Website':'#9d174d'};
 
-let bb_type = 'all';
-let bb_stage = 'all';
-let bb_sortField = 'arr';
-let bb_sortDir = -1;
+// ══════════════════════════════════════════════════════
+// SHARED CRM-STYLE PIPELINE ENGINE — used by both Blocker Board and
+// Dashboard. Source: "Shanu Chandra Integrations Collaboration" sheet,
+// "Final Tracker" tab (105 partners, downloaded and parsed directly from
+// the .xlsx export — no LLM-mediated fetch involved for this data).
+// ══════════════════════════════════════════════════════
+const FINAL_TRACKER = [
+  { cat: "Sales CRM", name: "Vinsolutions", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "Live" },
+  { cat: "Sales CRM", name: "Elead", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Sales CRM", name: "Dealersocket (Solera)", stage: "Tech Dev", substage: "Vendor Testing", eta: "30th July", blocked: "Partner", next: "There is a slot to release they will release this on 22nd july" },
+  { cat: "Sales CRM", name: "Tekion", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Sales CRM", name: "Dealersync", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Sales CRM", name: "ProMax (NCC)", stage: "Reachout", substage: "Initiated", eta: "25th july", blocked: "Spyne", next: "Rejected I had initiated the thread again yesterday did the email 09/07/2026" },
+  { cat: "Sales CRM", name: "DealerCenter", stage: "Meeting", substage: "Done", eta: "", blocked: "Partner", next: "As Multiple emails has been shared and thread has been started on Linkedin also" },
+  { cat: "Sales CRM", name: "CarWars", stage: "Meeting", substage: "Done", eta: "", blocked: "Spyne", next: "Low priority" },
+  { cat: "Sales CRM", name: "DriveCentric", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Sales CRM", name: "AutoRevo", stage: "Meeting", substage: "Done", eta: "", blocked: "Spyne", next: "Meeting was scheduled they cancelled the meeting Had tried reaching out again On every source email linkedin" },
+  { cat: "Sales CRM", name: "Quorum", stage: "Reachout", substage: "Initiated", eta: "", blocked: "Spyne", next: "Reached out multiple people on email and linkedin its in discussion stage" },
+  { cat: "Sales CRM", name: "Reynolds Sales", stage: "Contract", substage: "Legal", eta: "", blocked: "Partner", next: "Client has asked the 1 Million USD we are negotiating on this" },
+  { cat: "Sales CRM", name: "Light Speed", stage: "Reachout", substage: "Initiated", eta: "", blocked: "Partner", next: "Meeting was scheduled they cancelled the meeting Had tried reaching out again On every source email linkedin" },
+  { cat: "Sales CRM", name: "ProMax (NCC)", stage: "Reachout", substage: "Initiated", eta: "", blocked: "Partner", next: "Rejected I had initiated the thread again yesterday did the email 09/07/2026" },
+  { cat: "Sales CRM", name: "AutoRaptor", stage: "Reachout", substage: "Initiated", eta: "", blocked: "Partner", next: "Initiated the discussion once meeting was booked but paretner didnt showed up will push for meeting again" },
+  { cat: "Sales CRM", name: "Momentum CRM", stage: "NDA", substage: "Shared", eta: "25th July", blocked: "Spyne", next: "As there was no account was on hold will pic here on priority will start internal discussion with Dave on this as to look the pipeline on this" },
+  { cat: "Sales CRM", name: "Dealerpeak", stage: "Meeting", substage: "Done", eta: "", blocked: "Spyne", next: "Api is shared for exploring had forwarded the api to product now we need a internal discussion on this to tak this ahead" },
+  { cat: "Service Scheduler", name: "xTime", stage: "Live", substage: "Completed", eta: "", blocked: "Spyne", next: "live" },
+  { cat: "Service Scheduler", name: "MyKaarma", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Service Scheduler", name: "Status Plus", stage: "Meeting", substage: "Done", eta: "", blocked: "Partner", next: "Meeting done continuously following up with account on email and linkedin" },
+  { cat: "Service Scheduler", name: "Update Promise", stage: "Contract", substage: "Shared", eta: "15 Aug 26", blocked: "Spyne", next: "Its done from our side will share the agreement with today and will be done by tomorrow" },
+  { cat: "Service Scheduler", name: "Protractor", stage: "Reachout", substage: "Initiated", eta: "", blocked: "Partner", next: "Email and Linkedin thread has started continuously following up with them" },
+  { cat: "Service Scheduler", name: "AutoLoop", stage: "Reachout", substage: "Initiated", eta: "", blocked: "Partner", next: "Email and Linkedin thread has started continuously following up with them" },
+  { cat: "Service Scheduler", name: "Auto Live", stage: "Reachout", substage: "Initiated", eta: "", blocked: "Partner", next: "Email and Linkedin thread has started continuously following up with them" },
+  { cat: "Service Scheduler", name: "Omnique", stage: "Reachout", substage: "Initiated", eta: "", blocked: "Partner", next: "Email and Linkedin thread has started continuously following up with them" },
+  { cat: "Service Scheduler", name: "TCC", stage: "Meeting", substage: "Done", eta: "", blocked: "Partner", next: "Had done the meeting witrh them following for Nda  as waitng for their email for sharing the NDA" },
+  { cat: "Service Scheduler", name: "Light Speed", stage: "Meeting", substage: "Done", eta: "", blocked: "Partner", next: "They had denied once on this as i started the thread once again with them" },
+  { cat: "Service Scheduler", name: "CDK Service scheduler", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Service Scheduler", name: "Reynolds Services", stage: "Contract", substage: "Legal", eta: "", blocked: "Partner", next: "" },
+  { cat: "Service Scheduler", name: "DealerLogix (wi Advisor )", stage: "Meeting", substage: "Done", eta: "", blocked: "Partner", next: "" },
+  { cat: "Service Scheduler", name: "ServiceDrive", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Service Scheduler", name: "AutoPoint (Solera)", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "Finalize" },
+  { cat: "Service Scheduler", name: "Rapid Recon", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Service Scheduler", name: "DealerFX", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Service Scheduler", name: "Auto.live", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Service Scheduler", name: "Tekion", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Service Scheduler", name: "PBS", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Service Scheduler", name: "Evenflow", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Service Scheduler", name: "Redcap- Solera", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "" },
+  { cat: "DMS", name: "CDK DMS", stage: "Live", substage: "Completed", eta: "", blocked: "Spyne", next: "live" },
+  { cat: "DMS", name: "Reynolds DMS", stage: "Contract", substage: "Legal", eta: "", blocked: "Partner", next: "" },
+  { cat: "DMS", name: "Dealertrack DMS", stage: "API Exploration", substage: "Product", eta: "", blocked: "Spyne", next: "" },
+  { cat: "DMS", name: "Automate (Solera)", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "Finalize redline this week 2/20" },
+  { cat: "DMS", name: "Dealerbuilt", stage: "Meeting", substage: "Done", eta: "30th July", blocked: "Spyne", next: "Shared the api link to product and one form to fill will be filled by today and api will be Diuscussed" },
+  { cat: "DMS", name: "Tekion", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "DMS", name: "Affinitiv/AutoLoop", stage: "Reachout", substage: "Initiated", eta: "", blocked: "Partner", next: "un-responsive" },
+  { cat: "DMS", name: "Light Speed", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "" },
+  { cat: "DMS", name: "Dominion DMS", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "DMS", name: "PBS", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "" },
+  { cat: "DMS", name: "Frazer", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "Payments", name: "Offerlogix", stage: "Tech Dev", substage: "In Test", eta: "", blocked: "", next: "" },
+  { cat: "Payments", name: "Infomativ", stage: "Tech Dev", substage: "In Test", eta: "", blocked: "", next: "Pilot implementation" },
+  { cat: "IMS", name: "vAuto", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "Reynolds Inventory", stage: "Contract", substage: "Legal", eta: "", blocked: "Partner", next: "" },
+  { cat: "IMS", name: "Vincue", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "Homenet", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "Carfax", stage: "API Exploration", substage: "Product", eta: "", blocked: "", next: "" },
+  { cat: "IMS", name: "inventory-plus", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "Dealersync", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "Dealercarsearch", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "maxDigital (ACV)", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "HomeNet (Cox)", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "Vin solutions", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "Redline/Predian", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "JD Power", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "1 Source Trader", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "IMS", name: "Tekion Inventory", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Autotrader", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "CarGurus", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Cars.com", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Carvana", stage: "Reachout", substage: "", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Carbravo", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "TrueCar", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Autotrader UK", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "live" },
+  { cat: "Marketplaces", name: "Edmunds", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Carsales (AU)", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Drive (AU)", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "KBB (Kelley Blue Book)", stage: "API Exploration", substage: "Product", eta: "30th July", blocked: "Spyne", next: "Shared the api to product team will evaluate and share the apis required" },
+  { cat: "Marketplaces", name: "Facebook Marketplace", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "eBay Motors", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Oodle", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Autolist", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Carwow", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Motors.co.uk", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "AutoScout24", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Mobile.de", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Heycar", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "CarsGuide", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Marketplaces", name: "Gumtree Motors", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Website Providers", name: "Dealer Inspire", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "live" },
+  { cat: "Website Providers", name: "Dealer.com", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "live" },
+  { cat: "Website Providers", name: "Dealer On", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "live" },
+  { cat: "Website Providers", name: "EDealer", stage: "Meeting", substage: "Done", eta: "", blocked: "", next: "live" },
+  { cat: "Website Providers", name: "TeamVelocity", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Website Providers", name: "Overfuel", stage: "Reachout", substage: "", eta: "", blocked: "", next: "" },
+  { cat: "Parts", name: "Revolution parts", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "Identify use case fit for integration" },
+  { cat: "Catalog Management", name: "Dealer Specialities", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Catalog Management", name: "Car For Sales", stage: "Reachout", substage: "Initiated", eta: "", blocked: "Partner", next: "Schedule integration discussion" },
+  { cat: "Catalog Management", name: "DC", stage: "Meeting", substage: "Done", eta: "", blocked: "Spyne", next: "Integrations misses at our end to be figured out by our tech and CS team" },
+  { cat: "Vin Decoding", name: "BlackBooks", stage: "NDA", substage: "Nda Sighned", eta: "", blocked: "", next: "" },
+  { cat: "Vin Decoding", name: "ClearVIN", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" },
+  { cat: "DMS", name: "Transax", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Sales CRM", name: "HubSpot", stage: "Reachout", substage: "Initiated", eta: "", blocked: "", next: "" },
+  { cat: "Syndication", name: "Jd Power", stage: "Tech Dev", substage: "In Test", eta: "", blocked: "", next: "live" },
+  { cat: "CJi PROVIDER", name: "evox", stage: "Live", substage: "Completed", eta: "", blocked: "", next: "live" }
+];
 
-function filterType(t, el){
-  bb_type = t;
-  document.querySelectorAll('.fbar .fc').forEach(b=>b.classList.remove('active'));
-  if(el) el.classList.add('active');
-  renderBB();
+const FT_STAGE_ORDER = ['Reachout','Meeting','NDA','API Exploration','Contract','Tech Dev','Live'];
+const FT_STAGE_COLOR = {
+  'Reachout':{fg:'#475569',bg:'#f1f5f9'},
+  'Meeting':{fg:'#0369a1',bg:'#e0f2fe'},
+  'NDA':{fg:'#5b21b6',bg:'#ede9fe'},
+  'API Exploration':{fg:'#3730a3',bg:'#e0e7ff'},
+  'Contract':{fg:'#92400e',bg:'#fef3c7'},
+  'Tech Dev':{fg:'#0f766e',bg:'#ccfbf1'},
+  'Live':{fg:'#15803d',bg:'#dcfce7'},
+};
+const FT_STAGE_PROB = {'Reachout':10,'Meeting':25,'NDA':40,'API Exploration':55,'Contract':70,'Tech Dev':85,'Live':100};
+
+const CRM_CAT_TO_BB_TYPE = {
+  'Sales CRM':'Sales CRM', 'Service Scheduler':'Service', 'DMS':'DMS', 'IMS':'IMS',
+  'Marketplaces':'Marketplaces', 'Website Providers':'Website', 'Payments':'Payments',
+  'Parts':'Parts', 'Catalog Management':'Other', 'Vin Decoding':'VIN',
+};
+// ARR is pulled from the Blocker Board's own BB array (matched by normalized
+// name + category) since Final Tracker itself has no ARR column - so ARR
+// numbers here can never drift from what the Blocker Board shows.
+function ftBBMatch(r){
+  const bbType = CRM_CAT_TO_BB_TYPE[r.cat];
+  const pn = bbNorm(r.name);
+  let match = BB.find(b => bbNorm(b.n)===pn && (!bbType || b.t===bbType));
+  if(!match) match = BB.find(b => bbNorm(b.n)===pn);
+  return match || null;
 }
-
-function filterBB(s, el){
-  bb_stage = s;
-  document.querySelectorAll('.scard').forEach(c=>c.classList.remove('active'));
-  if(el) el.classList.add('active');
-  renderBB();
+// Rooftops/Groups reuse the same OB/CS Tracker cross-reference as the old
+// Blocker Board rooftop count - Rooftops = matching accounts in OBT_D,
+// Groups = distinct dealer groups among those rooftops.
+function ftRooftopsGroups(r){
+  const bbType = CRM_CAT_TO_BB_TYPE[r.cat];
+  if(!bbType) return {rooftops:0, groups:0, list:[]};
+  const list = bbRooftopsFor({t:bbType, n:r.name});
+  const groups = new Set(list.map(x=>x.acct)).size;
+  return {rooftops:list.length, groups, list};
 }
-
-function sortBB(field){
-  if(bb_sortField === field){
-    bb_sortDir = -bb_sortDir;
-  } else {
-    bb_sortField = field;
-    bb_sortDir = (field==='arr') ? -1 : 1;
+const FT_MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+// Days stuck is approximate - derived from the Blocker Board's month-level
+// "Stage Since" field (e.g. "Mar 26"), not an exact day count. Real, just
+// low-precision; partners with no Blocker Board match show "-".
+function ftDaysStuck(r){
+  const m = ftBBMatch(r);
+  if(!m || !m.en) return null;
+  const mm = m.en.match(/([A-Za-z]{3})[a-z]*\s*(\d{2,4})/);
+  if(!mm) return null;
+  const mon = FT_MONTHS[mm[1].slice(0,3)]; if(mon===undefined) return null;
+  let yr = parseInt(mm[2]); if(yr<100) yr += 2000;
+  const d = new Date(yr, mon, 1);
+  const days = Math.round((new Date()-d)/86400000);
+  return days>=0 ? days : null;
+}
+// Editable "Next steps" field - per-browser only (localStorage), not shared
+// across the team. Falls back to the sheet's own value until edited.
+function ftEditKey(r, field){ return 'spyne_ft_edit_'+field+'_'+r.cat+'|'+r.name; }
+function ftGetVal(r, field){
+  const stored = localStorage.getItem(ftEditKey(r,field));
+  return stored!==null ? stored : (r[field]||'');
+}
+document.addEventListener('change', function(e){
+  const t = e.target;
+  if(t && t.classList && t.classList.contains('ft-edit')){
+    localStorage.setItem('spyne_ft_edit_'+t.dataset.field+'_'+t.dataset.cat+'|'+t.dataset.name, t.value);
   }
-  renderBB();
-}
+});
 
-function bbTypeMatch(r, t){
-  if(t==='all') return true;
-  if(t==='crm') return r.t==='Sales CRM';
-  if(t==='dms') return r.t==='DMS';
-  if(t==='ims') return r.t==='IMS';
-  if(t==='service') return r.t==='Service';
-  if(t==='website') return r.t==='Website';
-  if(t==='other') return !['Sales CRM','DMS','IMS','Service','Website'].includes(r.t);
-  return true;
+const FT_UI = {};
+function ftInit(prefix, excludeLive){
+  if(!FT_UI[prefix]) FT_UI[prefix] = {stage:'all', cat:'all', blocked:'all', sort:'cat', dir:1, excludeLive: !!excludeLive};
+}
+function ftFilterStage(prefix, s){
+  FT_UI[prefix].stage = (FT_UI[prefix].stage===s) ? 'all' : s;
+  renderFT(prefix);
+}
+function ftSort(prefix, field){
+  const st = FT_UI[prefix];
+  if(st.sort===field){ st.dir=-st.dir; } else { st.sort=field; st.dir=(field==='arr'||field==='rooftops'||field==='days')?-1:1; }
+  renderFT(prefix);
+}
+function ftOnControl(prefix){
+  const st = FT_UI[prefix];
+  st.cat = (document.getElementById(prefix+'-cat')||{}).value || 'all';
+  st.blocked = (document.getElementById(prefix+'-blocked')||{}).value || 'all';
+  st.q = ((document.getElementById(prefix+'-q')||{}).value||'').toLowerCase();
+  renderFT(prefix);
+}
+function ftSubstageBuckets(rows){
+  const buckets = {};
+  rows.forEach(r=>{
+    const key = r.substage || '—';
+    if(!buckets[key]) buckets[key] = {count:0, arr:0};
+    buckets[key].count++;
+    const m = ftBBMatch(r);
+    if(m) buckets[key].arr += (m.arr||0);
+  });
+  return buckets;
+}
+function renderFT(prefix){
+  ftInit(prefix, FT_UI[prefix] ? FT_UI[prefix].excludeLive : false);
+  const st = FT_UI[prefix];
+  const base = st.excludeLive ? FINAL_TRACKER.filter(r=>r.stage!=='Live') : FINAL_TRACKER;
+
+  const catSel = document.getElementById(prefix+'-cat');
+  if(catSel && catSel.options.length<=1){
+    const cats = [...new Set(FINAL_TRACKER.map(r=>r.cat))].sort();
+    catSel.innerHTML = '<option value="all">All partners</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  }
+
+  const totalPartners = FINAL_TRACKER.length;
+  const liveCount = FINAL_TRACKER.filter(r=>r.stage==='Live').length;
+  const pipelineCount = totalPartners - liveCount;
+  let rooftopsServed = 0;
+  FINAL_TRACKER.filter(r=>r.stage==='Live').forEach(r=>{ rooftopsServed += ftRooftopsGroups(r).rooftops; });
+  let arrAtStake = 0;
+  FINAL_TRACKER.filter(r=>r.stage!=='Live').forEach(r=>{ const m=ftBBMatch(r); if(m) arrAtStake += (m.arr||0); });
+
+  const ovEl = document.getElementById(prefix+'-overview');
+  if(ovEl){
+    ovEl.innerHTML = `
+      <div class="ft-ov-item"><div class="n">${totalPartners}</div><div class="l">Partners</div></div>
+      <div class="ft-ov-item"><div class="n" style="color:#15803d;">${liveCount}</div><div class="l">Live</div></div>
+      <div class="ft-ov-item"><div class="n" style="color:#1d4ed8;">${pipelineCount}</div><div class="l">In pipeline</div></div>
+      <div class="ft-ov-item"><div class="n" style="color:#b91c1c;">${pipelineCount}</div><div class="l">Blocked</div></div>
+      <div class="ft-ov-item"><div class="n">${rooftopsServed}</div><div class="l">Rooftops served</div></div>
+      <div class="ft-ov-item"><div class="n" style="color:#b91c1c;">${fmtEV(arrAtStake)}</div><div class="l">ARR at stake</div></div>`;
+  }
+
+  const stagesToShow = st.excludeLive ? FT_STAGE_ORDER.filter(s=>s!=='Live') : FT_STAGE_ORDER;
+  const cardsEl = document.getElementById(prefix+'-cards');
+  if(cardsEl){
+    cardsEl.innerHTML = stagesToShow.map(s=>{
+      const rows = base.filter(r=>r.stage===s);
+      const col = FT_STAGE_COLOR[s];
+      const waiting = rows.reduce((sum,r)=>{ const m=ftBBMatch(r); return sum+(m?(m.arr||0):0); },0);
+      const days = rows.map(r=>ftDaysStuck(r)).filter(d=>d!==null);
+      const avgDays = days.length ? Math.round(days.reduce((a,b)=>a+b,0)/days.length) : null;
+      const oldestDays = days.length ? Math.max(...days) : null;
+      const buckets = ftSubstageBuckets(rows);
+      const active = st.stage===s ? 'active' : '';
+      return `<div class="ft-card ${active}" onclick="ftFilterStage('${prefix}','${s}')">
+        <div class="ft-card-hdr">
+          <span class="ft-card-name"><span class="ft-dot" style="background:${col.fg};"></span>${s}</span>
+          <span class="ft-card-count" style="color:${col.fg};">${rows.length}</span>
+        </div>
+        <div class="ft-card-waiting">${waiting?fmtEV(waiting)+' waiting':''}</div>
+        <div class="ft-card-meta">${avgDays!==null?'avg '+avgDays+'d':'avg —'} · ${oldestDays!==null?'oldest '+oldestDays+'d':'oldest —'}</div>
+        <div class="ft-card-prob-lbl">CONV. PROB <strong style="color:${col.fg};">${FT_STAGE_PROB[s]}%</strong></div>
+        <div class="ft-card-prob-track"><div class="ft-card-prob-fill" style="width:${FT_STAGE_PROB[s]}%;background:${col.fg};"></div></div>
+        <div class="ft-substage-chips">${Object.keys(buckets).map(k=>`<span class="ft-substage-chip">${k} · ${buckets[k].count}${buckets[k].arr?' · '+fmtEV(buckets[k].arr):''}</span>`).join('') || '<span class="ft-dash">No entries</span>'}</div>
+      </div>`;
+    }).join('');
+  }
+
+  let d = base;
+  if(st.stage!=='all') d = d.filter(r=>r.stage===st.stage);
+  if(st.cat && st.cat!=='all') d = d.filter(r=>r.cat===st.cat);
+  if(st.blocked && st.blocked!=='all') d = d.filter(r=>r.blocked===st.blocked);
+  if(st.q) d = d.filter(r=>r.name.toLowerCase().includes(st.q) || r.cat.toLowerCase().includes(st.q));
+
+  d = [...d].sort((a,b)=>{
+    if(st.sort==='name') return st.dir*a.name.localeCompare(b.name);
+    if(st.sort==='cat') return st.dir*(a.cat.localeCompare(b.cat)) || a.name.localeCompare(b.name);
+    if(st.sort==='stage') return st.dir*(FT_STAGE_ORDER.indexOf(a.stage)-FT_STAGE_ORDER.indexOf(b.stage));
+    if(st.sort==='arr'){ const av=(ftBBMatch(a)||{}).arr||0, bv=(ftBBMatch(b)||{}).arr||0; return st.dir*(av-bv); }
+    if(st.sort==='rooftops'){ return st.dir*(ftRooftopsGroups(a).rooftops-ftRooftopsGroups(b).rooftops); }
+    if(st.sort==='days'){ const av=ftDaysStuck(a)??-1, bv=ftDaysStuck(b)??-1; return st.dir*(av-bv); }
+    return 0;
+  });
+
+  const capEl = document.getElementById(prefix+'-caption');
+  if(capEl) capEl.textContent = (st.stage!=='all'?st.stage+' · ':'') + d.length+' of '+base.length+' partners'+(st.excludeLive?' (non-live)':'');
+
+  const tbody = document.getElementById(prefix+'-tbody');
+  if(tbody){
+    tbody.innerHTML = d.map((r,i)=>{
+      const col = FT_STAGE_COLOR[r.stage] || {fg:'#6b7280',bg:'#f3f4f6'};
+      const m = ftBBMatch(r);
+      const arrCell = m ? `<span style="font-weight:800;color:#b91c1c;">${fmtEV(m.arr)}</span>` : (r.stage==='Live' ? '<span style="color:#15803d;font-weight:700;">Live</span>' : '<span class="ft-dash">—</span>');
+      const rg = ftRooftopsGroups(r);
+      const rtTitle = rg.list.length ? rg.list.map(x=>x.acct+' — '+x.rooftop).join('\n').replace(/"/g,'&quot;') : '';
+      const rtCell = rg.rooftops ? `<span style="font-weight:800;color:#1d4ed8;" title="${rtTitle}">${rg.rooftops}</span>` : '<span class="ft-dash">—</span>';
+      const grpCell = rg.groups || '<span class="ft-dash">—</span>';
+      const days = ftDaysStuck(r);
+      const daysCell = days!==null ? days+'d' : '<span class="ft-dash">—</span>';
+      const blBadge = r.blocked==='Partner' ? '<span class="bl-partner">Partner</span>' : r.blocked==='Spyne' ? '<span class="bl-spyne">Spyne</span>' : '<span class="bl-none">—</span>';
+      const nextRaw = ftGetVal(r,'next');
+      const nextVal = (r.stage==='Live' && /^(live|completed)$/i.test((nextRaw||'').trim())) ? '' : nextRaw;
+      return `<tr>
+        <td style="color:#9ca3af;font-size:10px;font-weight:700;text-align:center;">${i+1}</td>
+        <td style="font-weight:700;font-size:13px;">${r.name}<div style="font-size:9.5px;color:#9ca3af;text-transform:uppercase;">${r.cat}</div></td>
+        <td><span class="ft-stage-badge" style="background:${col.bg};color:${col.fg};">${r.substage||r.stage}</span></td>
+        <td style="text-align:right;">${arrCell}</td>
+        <td style="text-align:center;">${rtCell}</td>
+        <td style="text-align:center;">${grpCell}</td>
+        <td style="text-align:center;font-size:12px;color:#6b7280;">${daysCell}</td>
+        <td>${blBadge}</td>
+        <td><input class="ft-edit" data-field="next" data-cat="${r.cat}" data-name="${r.name.replace(/"/g,'&quot;')}" value="${(nextVal||'').replace(/"/g,'&quot;')}" placeholder="—"></td>
+      </tr>`;
+    }).join('');
+  }
 }
 
 // ── Rooftops pending — cross-references each Blocker Board partner against the
@@ -1234,91 +1478,6 @@ function bbRooftopsFor(r){
   return rooftops;
 }
 
-function renderBB(){
-  const q = (document.getElementById('bb-search').value || '').toLowerCase();
-  let d = BB.filter(r => bbTypeMatch(r, bb_type));
-  if(bb_stage !== 'all') d = d.filter(r => r.s === bb_stage);
-  if(q) d = d.filter(r => r.n.toLowerCase().includes(q) || (r.road||'').toLowerCase().includes(q));
-
-  d = [...d].sort((a,b) => {
-    let av, bv;
-    if(bb_sortField==='name'){ av=a.n; bv=b.n; return bb_sortDir*av.localeCompare(bv); }
-    if(bb_sortField==='type'){ av=a.t; bv=b.t; return bb_sortDir*av.localeCompare(bv); }
-    if(bb_sortField==='arr'){ return bb_sortDir*((a.arr||0)-(b.arr||0)); }
-    if(bb_sortField==='stage'){ return bb_sortDir*((sord[a.s]??9)-(sord[b.s]??9)); }
-    if(bb_sortField==='entered'){ av=a.en||''; bv=b.en||''; return bb_sortDir*av.localeCompare(bv); }
-    if(bb_sortField==='eta'){ av=a.eta||''; bv=b.eta||''; return bb_sortDir*av.localeCompare(bv); }
-    if(bb_sortField==='time'){ av=a.time||''; bv=b.time||''; return bb_sortDir*av.localeCompare(bv); }
-    if(bb_sortField==='rooftops'){ return bb_sortDir*(bbRooftopsFor(a).length-bbRooftopsFor(b).length); }
-    return 0;
-  });
-
-  document.getElementById('bb-table-caption').textContent =
-    (bb_stage==='all' ? 'All non-live partners' : (smap[bb_stage]?smap[bb_stage].l:'')+' partners') +
-    (bb_type!=='all' ? ' · '+bb_type.toUpperCase() : '') +
-    ' · '+d.length+' shown · direct from Integration Collaboration Sheet';
-
-  document.getElementById('bb-tbody').innerHTML = d.map(r=>{
-    const stageInfo = smap[r.s] || {cls:'',l:r.s};
-    const blInfo = blMap[r.bl];
-    const tColor = typeColor[r.t] || '#4b5563';
-    const rooftops = bbRooftopsFor(r);
-    const rtTitle = rooftops.length ? rooftops.map(x=>x.acct+' — '+x.rooftop).join('\n') : 'No live rooftop currently mapped to this partner in the OB/CS Tracker';
-    const rtCell = BB_TYPE_FIELD[r.t]
-      ? `<span title="${rtTitle.replace(/"/g,'&quot;')}" style="font-weight:800;color:${rooftops.length?'#1d4ed8':'#9ca3af'};cursor:${rooftops.length?'help':'default'};">${rooftops.length}</span>`
-      : '<span style="color:#9ca3af;">—</span>';
-    return `<tr>
-      <td></td>
-      <td style="font-weight:800;">${r.n}</td>
-      <td style="color:${tColor};font-weight:700;font-size:12.5px;">${r.t}</td>
-      <td style="text-align:right;font-weight:800;">${fmtEV(r.arr)}</td>
-      <td style="text-align:center;">${rtCell}</td>
-      <td><span class="${stageInfo.cls}" style="padding:3px 10px;font-size:12px;font-weight:700;display:inline-block;">${stageInfo.l}</span></td>
-      <td style="font-size:12.5px;color:#6b7280;">${r.en || '—'}</td>
-      <td style="font-size:12.5px;color:#6b7280;">${r.eta || '—'}</td>
-      <td style="font-size:12.5px;color:#6b7280;">${r.time || '—'}</td>
-      <td style="font-size:13px;color:#4b5563;max-width:280px;">${r.road || ''}</td>
-      <td style="text-align:center;">${blInfo ? `<span class="blt ${blInfo.cls}">${blInfo.l}</span>` : '—'}</td>
-    </tr>`;
-  }).join('');
-
-  renderBBSummary();
-}
-
-function renderBBSummary(){
-  const byStage = {};
-  ['dev','biz','meet','reach','pend'].forEach(s=>{
-    const rows = BB.filter(r=>r.s===s);
-    byStage[s] = {count: rows.length, arr: rows.reduce((sum,r)=>sum+(r.arr||0),0), names: rows.map(r=>r.n)};
-  });
-  const totalArr = BB.reduce((s,r)=>s+(r.arr||0),0);
-
-  document.getElementById('cnt-all').textContent = BB.length;
-  document.getElementById('arr-all-bb').textContent = fmtEV(totalArr)+' ARR at risk';
-  document.getElementById('ab-total-arr').textContent = fmtEV(totalArr);
-  document.getElementById('ab-total-sub').textContent = BB.length+' non-live partners';
-
-  document.getElementById('cnt-dev').textContent = byStage.dev.count;
-  document.getElementById('arr-dev-bb').textContent = fmtEV(byStage.dev.arr);
-  document.getElementById('ab-dev-arr').textContent = fmtEV(byStage.dev.arr);
-  document.getElementById('ab-dev-sub').textContent = byStage.dev.names.slice(0,3).join(', ') || '—';
-
-  document.getElementById('cnt-biz').textContent = byStage.biz.count;
-  document.getElementById('arr-biz-bb').textContent = fmtEV(byStage.biz.arr);
-  document.getElementById('ab-biz-arr').textContent = fmtEV(byStage.biz.arr);
-  document.getElementById('ab-biz-sub').textContent = byStage.biz.names.slice(0,3).join(', ') || '—';
-
-  document.getElementById('cnt-meet').textContent = byStage.meet.count;
-  document.getElementById('ab-meet-arr').textContent = fmtEV(byStage.meet.arr);
-  document.getElementById('ab-meet-sub').textContent = byStage.meet.names.slice(0,3).join(', ') || '—';
-
-  document.getElementById('cnt-reach').textContent = byStage.reach.count;
-
-  document.getElementById('cnt-pend').textContent = byStage.pend.count;
-  document.getElementById('ab-pend-arr').textContent = fmtEV(byStage.pend.arr);
-  document.getElementById('ab-pend-sub').textContent = byStage.pend.names.slice(0,3).join(', ') || '—';
-}
-
 function sv(name, el){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -1328,325 +1487,58 @@ function sv(name, el){
   if(name==='obtrack') renderOBT();
   if(name==='pricing') renderPricing();
   if(name==='slack') slkRender();
-  if(name==='dashboard') renderCRMView();
+  if(name==='blockers') renderFT('ftb');
+  if(name==='dashboard') renderFT('ftd');
 }
 
-document.addEventListener('DOMContentLoaded', function(){ renderBB(); });
+document.addEventListener('DOMContentLoaded', function(){ ftInit('ftb', true); renderFT('ftb'); });
 </script>
 <div id="view-dashboard" class="view">
-<style>
-/* ── Dashboard tab v6 — CRM View, sourced from CRM_View_for_CEO sheet ── */
-.cv-eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#15803d;font-weight:800;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.cv-h1{font-size:26px;font-weight:900;color:#111827;margin-bottom:4px;}
-.cv-sub{font-size:12.5px;color:#4b5563;margin-bottom:16px;max-width:900px;line-height:1.6;}
-.cv-strip{display:grid;grid-template-columns:repeat(9,1fr);gap:8px;margin-bottom:16px;}
-.cv-sc{background:#fff;border:1px solid #e5e7eb;border-radius:9px;padding:10px 8px;text-align:center;cursor:pointer;transition:border-color .15s;}
-.cv-sc:hover,.cv-sc.active{border-color:#2563eb;}
-.cv-sc .n{font-size:20px;font-weight:900;line-height:1;}
-.cv-sc .l{font-size:8.5px;font-weight:700;color:#6b7280;margin-top:4px;text-transform:uppercase;letter-spacing:.02em;line-height:1.3;}
-.cv-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
-.cv-sel{padding:5px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;background:#fff;color:#111827;outline:none;}
-.cv-srch{margin-left:auto;position:relative;}
-.cv-srch input{background:#fff;border:1px solid #d1d5db;border-radius:6px;color:#111827;font-size:12px;padding:5px 10px 5px 26px;width:200px;outline:none;}
-.cv-srch .ic{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:13px;}
-.cv-stage-badge{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:700;white-space:nowrap;}
-.cv-cat-tag{font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.03em;}
-.cv-next{font-size:13px;color:#374151;max-width:220px;}
-.cv-last{font-size:13px;color:#6b7280;max-width:200px;}
-.cv-dash{color:#c9ccd2;}
-</style>
 
-<div class="cv-h1">Integration View</div>
+  <div style="margin-bottom:14px;">
+    <div style="font-size:22px;font-weight:900;color:#111827;margin-bottom:2px;">Integrations</div>
+    <div style="font-size:12px;color:#6b7280;">All partners — live and pipeline. Source: Final Tracker (Shanu Chandra Integrations Collaboration sheet).</div>
+  </div>
 
-<!-- STAGE SUMMARY STRIP -->
-<div class="cv-strip" id="cv-strip"></div>
+  <div class="ft-overview" id="ftd-overview"></div>
+  <div class="ft-cards" id="ftd-cards"></div>
 
-<!-- FILTERS -->
-<div class="cv-filters">
-  <span style="font-size:11px;color:#4b5563;font-weight:600;">Category:</span>
-  <select id="cv-cat" class="cv-sel" onchange="renderCRMView()"><option value="all">All</option></select>
-  <span style="font-size:11px;color:#4b5563;font-weight:600;">Status:</span>
-  <select id="cv-blocked" class="cv-sel" onchange="renderCRMView()">
-    <option value="all">All</option>
-    <optgroup label="Blocked On">
+  <div class="ft-filters">
+    <span style="font-size:11px;color:#4b5563;font-weight:600;">Category:</span>
+    <select id="ftd-cat" class="ft-sel" onchange="ftOnControl('ftd')"><option value="all">All partners</option></select>
+    <span style="font-size:11px;color:#4b5563;font-weight:600;">Blocked On:</span>
+    <select id="ftd-blocked" class="ft-sel" onchange="ftOnControl('ftd')">
+      <option value="all">All</option>
       <option value="Partner">Partner</option>
       <option value="Spyne">Spyne</option>
-    </optgroup>
-    <optgroup label="Stage">
-      <option value="stage-blocked">Blocked (not yet Completed)</option>
-      <option value="stage-completed">Completed</option>
-    </optgroup>
-  </select>
-  <div class="cv-srch"><span class="ic">⌕</span><input id="cv-q" placeholder="Search partner…" oninput="renderCRMView()"></div>
-</div>
-
-<!-- TABLE -->
-<div class="tw">
-  <div class="th2">
-    <div class="tt" id="cv-caption">All partners · CRM View tracker</div>
-    <div class="tn">Click a stage card above to filter, or a column header to sort · Source: CRM_View_for_CEO sheet</div>
+    </select>
+    <span class="ft-clear" onclick="FT_UI['ftd'].stage='all';renderFT('ftd');">← All stages</span>
+    <div class="ft-srch"><span class="ic">⌕</span><input id="ftd-q" placeholder="Search partner…" oninput="ftOnControl('ftd')"></div>
   </div>
-  <div style="overflow-x:auto;">
-  <table>
-    <thead><tr>
-      <th onclick="sortCV('cat')">Category ↕</th>
-      <th onclick="sortCV('name')">Partner ↕</th>
-      <th onclick="sortCV('stage')">Stage ↕</th>
-      <th onclick="sortCV('arr')" style="text-align:right">ARR ($) ↕</th>
-      <th onclick="sortCV('rooftops')" style="text-align:center;">Rooftop Count ↕</th>
-      <th onclick="sortCV('blocked')">Blocked On ↕</th>
-      <th onclick="sortCV('eta')">ETA ↕</th>
-      <th>Next Steps</th>
-      <th>Last Activity</th>
-    </tr></thead>
-    <tbody id="cv-tbody"></tbody>
-  </table>
+
+  <div class="tw">
+    <div class="th2">
+      <div class="tt" id="ftd-caption">All partners</div>
+      <div class="tn">Click a stage card to filter, or a column header to sort · Next Steps is editable, saved in this browser</div>
+    </div>
+    <div style="overflow-x:auto;">
+    <table>
+      <thead><tr>
+        <th>#</th>
+        <th onclick="ftSort('ftd','name')">Partner ↕</th>
+        <th onclick="ftSort('ftd','stage')">Substage ↕</th>
+        <th onclick="ftSort('ftd','arr')" style="text-align:right;">ARR at stake ↕</th>
+        <th onclick="ftSort('ftd','rooftops')" style="text-align:center;">Rooftops ↕</th>
+        <th style="text-align:center;">Groups</th>
+        <th onclick="ftSort('ftd','days')" style="text-align:center;">Days stuck ↕</th>
+        <th>Blocked · Why</th>
+        <th>Next steps</th>
+      </tr></thead>
+      <tbody id="ftd-tbody"></tbody>
+    </table>
+    </div>
   </div>
 </div>
-</div>
-
-<script>
-const CRM_STAGE_ORDER = ['Completed','Integration Testing','In Progress','Business Discussion','Meeting Done','Meeting Scheduled','Reachout','Not Started','Rejected'];
-const CRM_STAGE_COLOR = {
-  'Not Started':        {fg:'#6b7280', bg:'#f3f4f6'},
-  'Reachout':            {fg:'#475569', bg:'#f1f5f9'},
-  'Meeting Scheduled':   {fg:'#5b21b6', bg:'#ede9fe'},
-  'Meeting Done':        {fg:'#0369a1', bg:'#e0f2fe'},
-  'Business Discussion': {fg:'#92400e', bg:'#fef3c7'},
-  'Integration Testing': {fg:'#0f766e', bg:'#ccfbf1'},
-  'In Progress':         {fg:'#3730a3', bg:'#e0e7ff'},
-  'Completed':           {fg:'#15803d', bg:'#dcfce7'},
-  'Rejected':            {fg:'#b91c1c', bg:'#fee2e2'},
-};
-
-const CRM_VIEW = [
-  { cat: "Sales CRM", name: "Vinsolutions", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Sales CRM", name: "Elead", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Sales CRM", name: "Dealersocket (Solera)", stage: "Integration Testing", blocked: "", eta: "", next: "Followed up On the email Yesterday Dave is also following up", last: "Dealersocket dev team not responding" },
-  { cat: "Sales CRM", name: "Tekion", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Sales CRM", name: "Dealersync", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Sales CRM", name: "Momentum CRM", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "Reached out to POC, 2/17" },
-  { cat: "Sales CRM", name: "DealerCenter", stage: "Business Discussion", blocked: "", eta: "", next: "Meeting on 2/27", last: "" },
-  { cat: "Sales CRM", name: "CarWars", stage: "Business Discussion", blocked: "", eta: "", next: "Low priority", last: "Had initial demo some time ago" },
-  { cat: "Sales CRM", name: "DriveCentric", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Sales CRM", name: "AutoRevo", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "reached out to Bill 2/18" },
-  { cat: "Sales CRM", name: "Quorum", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Sales CRM", name: "Reynolds Sales", stage: "Business Discussion", blocked: "Partner", eta: "", next: "2/23 for proposal", last: "Reyrey working on proposal" },
-  { cat: "Sales CRM", name: "Light Speed", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Sales CRM", name: "ProMax (NCC)", stage: "Rejected", blocked: "", eta: "", next: "", last: "NCC/ Brian Skutta reach out 2/18" },
-  { cat: "Sales CRM", name: "AutoRaptor", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "Having own CI doesnt want to integrate" },
-  { cat: "Sales CRM", name: "Dealerpeak", stage: "Integration Testing", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "xTime", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "MyKaarma", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Status Plus", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Update Promise", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "Scheduled call 2/20" },
-  { cat: "Service Scheduler", name: "Protractor", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "AutoLoop", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Auto Live", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Omnique", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "TCC", stage: "Business Discussion", blocked: "Partner", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Light Speed", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "CDK Service scheduler", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Reynolds Services", stage: "Business Discussion", blocked: "Partner", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "DealerLogix", stage: "Business Discussion", blocked: "Partner", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "ServiceDrive", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "AutoPoint (Solera)", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Rapid Recon", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "DealerFX", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Auto.live", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Tekion", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "PBS", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Evenflow", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Service Scheduler", name: "Redcap- Solera", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "CDK DMS", stage: "Completed", blocked: "Spyne", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "Reynolds DMS", stage: "Business Discussion", blocked: "Partner", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "Dealertrack DMS", stage: "Meeting Done", blocked: "Spyne", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "Automate (Solera)", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "Dealerbuilt", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "Tekion", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "Affinitiv/AutoLoop", stage: "Meeting Done", blocked: "Partner", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "Light Speed", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "Dominion DMS", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "PBS", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "Frazer", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Payments", name: "Offerlogix", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Payments", name: "Infomativ", stage: "In Progress", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "vAuto", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "Reynolds Inventory", stage: "Business Discussion", blocked: "Partner", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "Vincue", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "Homenet", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "Carfax", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "inventory-plus", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "Dealersync", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "Dealercarsearch", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "maxDigital (ACV)", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "HomeNet (Cox)", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "Vin solutions", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "Redline/Predian", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "JD Power", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "1 Source Trader", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "IMS", name: "Tekion Inventory", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Autotrader", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "CarGurus", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Cars.com", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Carvana", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Carfax", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Kalley Blue Book", stage: "Integration Testing", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Carbravo", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "TrueCar", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Autotrader UK", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Edmunds", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Carsales (AU)", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Drive (AU)", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "KBB (Kelley Blue Book)", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Facebook Marketplace", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "eBay Motors", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Oodle", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Autolist", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Carwow", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Motors.co.uk", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "AutoScout24", stage: "Reachout", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Mobile.de", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Heycar", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "CarsGuide", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Marketplaces", name: "Gumtree Motors", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Website Providers", name: "Dealer Inspire", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Website Providers", name: "Dealer.com", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Website Providers", name: "Dealer On", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Website Providers", name: "EDealer", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Website Providers", name: "TeamVelocity", stage: "Meeting Scheduled", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Website Providers", name: "Overfuel", stage: "Not Started", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Parts", name: "Revolution parts", stage: "Meeting Done", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Catalog Management", name: "Dealer Specialities", stage: "Integration Testing", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Catalog Management", name: "Car For Sales", stage: "Meeting Scheduled", blocked: "Partner", eta: "", next: "", last: "" },
-  { cat: "Catalog Management", name: "DC", stage: "Meeting Done", blocked: "Spyne", eta: "", next: "", last: "" },
-  { cat: "Vin Decoding", name: "BlackBooks", stage: "Business Discussion", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Vin Decoding", name: "ClearVIN", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "DMS", name: "Transax", stage: "Not Started", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Sales CRM", name: "HubSpot", stage: "Not Started", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Syndication", name: "Jd Power", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-  { cat: "Sales CRM", name: "CRM-ADF", stage: "Not Started", blocked: "", eta: "", next: "", last: "" },
-  { cat: "CJi Provider", name: "evox", stage: "Completed", blocked: "", eta: "", next: "", last: "" },
-];
-
-let cv_stage = 'all', cv_cat = 'all', cv_blocked = 'all';
-let cv_sortField = 'cat', cv_sortDir = 1;
-function sortCV(field){
-  if(cv_sortField === field){
-    cv_sortDir = -cv_sortDir;
-  } else {
-    cv_sortField = field;
-    cv_sortDir = (field==='arr' || field==='rooftops') ? -1 : 1;
-  }
-  renderCRMView();
-}
-const CRM_CAT_PRIORITY = ['Sales CRM','Service Scheduler','DMS','IMS'];
-function cvCatRank(cat){
-  const i = CRM_CAT_PRIORITY.indexOf(cat);
-  return i===-1 ? CRM_CAT_PRIORITY.length : i;
-}
-const CRM_ALL_CATS = [...new Set(CRM_VIEW.map(r=>r.cat))].sort((a,b)=> cvCatRank(a)-cvCatRank(b) || a.localeCompare(b));
-
-// ── ARR + Rooftop Count, per integration — pulled directly from the Blocker
-// Board's own BB array and bbRooftopsFor() (not recomputed independently),
-// so the numbers here can never drift from what the Blocker Board shows.
-// BB only tracks non-live partners, so Completed partners here simply have
-// no match — that's expected, not a bug.
-const CRM_CAT_TO_BB_TYPE = {
-  'Sales CRM':'Sales CRM', 'Service Scheduler':'Service', 'DMS':'DMS', 'IMS':'IMS',
-  'Marketplaces':'Marketplaces', 'Website Providers':'Website', 'Payments':'Payments',
-  'Parts':'Parts', 'Catalog Management':'Other', 'Vin Decoding':'VIN',
-};
-function cvBBMatch(r){
-  const bbType = CRM_CAT_TO_BB_TYPE[r.cat];
-  const pn = bbNorm(r.name);
-  let match = BB.find(b => bbNorm(b.n)===pn && (!bbType || b.t===bbType));
-  if(!match) match = BB.find(b => bbNorm(b.n)===pn);
-  return match || null;
-}
-
-function cvFilterStage(s, el){
-  cv_stage = (cv_stage===s) ? 'all' : s;
-  renderCRMView();
-}
-
-function renderCRMView(){
-  const catSel = document.getElementById('cv-cat');
-  if(catSel && catSel.options.length<=1){
-    catSel.innerHTML = '<option value="all">All</option>' + CRM_ALL_CATS.map(c=>`<option value="${c}">${c}</option>`).join('');
-  }
-  cv_cat = catSel ? catSel.value : 'all';
-  cv_blocked = (document.getElementById('cv-blocked')||{}).value || 'all';
-  const q = ((document.getElementById('cv-q')||{}).value||'').toLowerCase();
-
-  // stage counts computed off the full dataset, independent of filters, so the strip is a stable overview
-  const counts = {};
-  CRM_STAGE_ORDER.forEach(s=>counts[s]=0);
-  CRM_VIEW.forEach(r=>{ if(counts[r.stage]!==undefined) counts[r.stage]++; });
-
-  document.getElementById('cv-strip').innerHTML = CRM_STAGE_ORDER.map(s=>{
-    const col = CRM_STAGE_COLOR[s];
-    const active = cv_stage===s ? 'active' : '';
-    return `<div class="cv-sc ${active}" onclick="cvFilterStage('${s}', this)">
-      <div class="n" style="color:${col.fg};">${counts[s]}</div>
-      <div class="l">${s}</div>
-    </div>`;
-  }).join('');
-
-  let d = CRM_VIEW.filter(r=>true);
-  if(cv_stage!=='all') d = d.filter(r=>r.stage===cv_stage);
-  if(cv_cat!=='all') d = d.filter(r=>r.cat===cv_cat);
-  if(cv_blocked==='stage-completed') d = d.filter(r=>r.stage==='Completed');
-  else if(cv_blocked==='stage-blocked') d = d.filter(r=>r.stage!=='Completed');
-  else if(cv_blocked!=='all') d = d.filter(r=>r.blocked===cv_blocked);
-  if(q) d = d.filter(r=>r.name.toLowerCase().includes(q) || r.cat.toLowerCase().includes(q));
-
-  d = [...d].sort((a,b)=>{
-    if(cv_sortField==='cat') return cv_sortDir*(cvCatRank(a.cat)-cvCatRank(b.cat)) || a.cat.localeCompare(b.cat) || a.name.localeCompare(b.name);
-    if(cv_sortField==='name') return cv_sortDir*a.name.localeCompare(b.name);
-    if(cv_sortField==='stage') return cv_sortDir*(CRM_STAGE_ORDER.indexOf(a.stage)-CRM_STAGE_ORDER.indexOf(b.stage));
-    if(cv_sortField==='arr'){
-      const av=(cvBBMatch(a)||{}).arr||0, bv=(cvBBMatch(b)||{}).arr||0;
-      return cv_sortDir*(av-bv);
-    }
-    if(cv_sortField==='rooftops'){
-      const ma=cvBBMatch(a), mb=cvBBMatch(b);
-      const av = ma?bbRooftopsFor(ma).length:0, bv = mb?bbRooftopsFor(mb).length:0;
-      return cv_sortDir*(av-bv);
-    }
-    if(cv_sortField==='blocked') return cv_sortDir*((a.blocked||'').localeCompare(b.blocked||''));
-    if(cv_sortField==='eta') return cv_sortDir*((a.eta||'').localeCompare(b.eta||''));
-    return 0;
-  });
-
-  document.getElementById('cv-caption').textContent =
-    (cv_stage!=='all' ? cv_stage+' · ' : '') +
-    (cv_cat!=='all' ? cv_cat+' · ' : '') +
-    d.length+' of '+CRM_VIEW.length+' partners · CRM View tracker';
-
-  document.getElementById('cv-tbody').innerHTML = d.map(r=>{
-    const col = CRM_STAGE_COLOR[r.stage] || {fg:'#6b7280',bg:'#f3f4f6'};
-    const blBadge = r.blocked==='Partner' ? '<span class="bl-partner">Partner</span>'
-      : r.blocked==='Spyne' ? '<span class="bl-spyne">Spyne</span>'
-      : '<span class="bl-none">—</span>';
-    const bbMatch = cvBBMatch(r);
-    const arrCell = bbMatch ? `<span style="font-weight:800;color:#b91c1c;">${fmtEV(bbMatch.arr)}</span>` : (r.stage==='Completed' ? '<span style="color:#15803d;font-weight:700;">Live</span>' : '<span class="cv-dash">—</span>');
-    const rooftopCount = bbMatch ? bbRooftopsFor(bbMatch).length : 0;
-    const rtCell = bbMatch ? `<span style="font-weight:800;color:${rooftopCount?'#1d4ed8':'#9ca3af'};">${rooftopCount}</span>` : '<span class="cv-dash">—</span>';
-    return `<tr>
-      <td class="cv-cat-tag">${r.cat}</td>
-      <td style="font-weight:700;font-size:14px;">${r.name}</td>
-      <td><span class="cv-stage-badge" style="background:${col.bg};color:${col.fg};">${r.stage}</span></td>
-      <td style="text-align:right;">${arrCell}</td>
-      <td style="text-align:center;">${rtCell}</td>
-      <td>${blBadge}</td>
-      <td style="font-size:13px;color:#6b7280;">${r.eta || '<span class="cv-dash">—</span>'}</td>
-      <td class="cv-next">${r.next || '<span class="cv-dash">—</span>'}</td>
-      <td class="cv-last">${r.last || '<span class="cv-dash">—</span>'}</td>
-    </tr>`;
-  }).join('');
-}
-</script>
 
 
 <!-- ═══════════════════════════════════════════════════
