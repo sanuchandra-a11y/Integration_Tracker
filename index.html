@@ -234,31 +234,46 @@ td{padding:9px 11px;font-size:13.5px;vertical-align:middle;}
   .ft-ov-item{background:#fff;border:1px solid #e5e7eb;border-radius:9px;padding:10px 16px;flex:1;min-width:110px;text-align:center;}
   .ft-ov-item .n{font-size:22px;font-weight:900;line-height:1;}
   .ft-ov-item .l{font-size:10px;color:#6b7280;margin-top:3px;text-transform:uppercase;letter-spacing:.03em;}
-  .ft-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px;}
+  .ft-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:16px;}
   .ft-card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .15s;}
   .ft-card:hover,.ft-card.active{border-color:#2563eb;}
-  .ft-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .ft-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
   .ft-card-name{font-size:12px;font-weight:700;color:#111827;display:flex;align-items:center;gap:5px;}
   .ft-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
   .ft-card-count{font-size:20px;font-weight:900;}
-  .ft-card-waiting{font-size:12.5px;font-weight:700;color:#111827;margin-bottom:2px;min-height:16px;}
-  .ft-card-meta{font-size:9.5px;color:#9ca3af;margin-bottom:8px;}
-  .ft-card-prob-lbl{font-size:9px;color:#9ca3af;margin-bottom:4px;}
-  .ft-card-prob-track{background:#f3f4f6;border-radius:4px;height:5px;overflow:hidden;margin-bottom:8px;}
+  .ft-avatars{display:flex;align-items:center;margin-bottom:9px;min-height:20px;}
+  .ft-avatar{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:800;color:#fff;border:1.5px solid #fff;margin-left:-6px;flex-shrink:0;}
+  .ft-avatar:first-child{margin-left:0;}
+  .ft-avatar-more{background:#e5e7eb;color:#6b7280;}
+  .ft-card-waiting{font-size:13px;font-weight:800;color:#111827;margin-bottom:2px;min-height:17px;}
+  .ft-card-meta{font-size:9.5px;color:#9ca3af;margin-bottom:9px;}
+  .ft-card-prob-lbl{font-size:9px;color:#9ca3af;margin-bottom:4px;text-transform:uppercase;letter-spacing:.03em;}
+  .ft-card-prob-track{background:#f3f4f6;border-radius:4px;height:5px;overflow:hidden;margin-bottom:10px;}
   .ft-card-prob-fill{height:100%;border-radius:4px;}
-  .ft-substage-chips{display:flex;flex-wrap:wrap;gap:4px;}
-  .ft-substage-chip{background:#f3f4f6;color:#4b5563;font-size:9.5px;font-weight:600;padding:3px 7px;border-radius:5px;}
+  .ft-substage-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .ft-substage-box{background:#f9fafb;border:1px solid #f0f0f2;border-radius:7px;padding:6px 8px;}
+  .ft-substage-box .lbl{font-size:9px;color:#9ca3af;margin-bottom:2px;}
+  .ft-substage-box .val{font-size:12px;font-weight:800;color:#111827;}
+  .ft-substage-box .val small{font-size:9.5px;font-weight:600;color:#6b7280;}
   .ft-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
   .ft-sel{padding:5px 10px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;background:#fff;color:#111827;outline:none;}
   .ft-clear{font-size:11px;color:#2563eb;cursor:pointer;font-weight:600;}
   .ft-srch{margin-left:auto;position:relative;}
   .ft-srch input{background:#fff;border:1px solid #d1d5db;border-radius:6px;color:#111827;font-size:12px;padding:5px 10px 5px 26px;width:200px;outline:none;}
   .ft-srch .ic{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:13px;}
-  .ft-stage-badge{display:inline-flex;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+  .ft-stage-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
   .ft-edit{width:100%;border:1px solid transparent;background:transparent;font-size:12px;color:#111827;padding:3px 5px;border-radius:5px;font-family:inherit;}
   .ft-edit:hover{border-color:#d1d5db;}
   .ft-edit:focus{border-color:#2563eb;background:#fff;outline:none;}
   .ft-dash{color:#c9ccd2;}
+  .ft-table-wrap table{width:100%;border-collapse:collapse;}
+  .ft-table-wrap thead tr.ft-hdr-row th{background:#0f172a;color:#e2e8f0;padding:9px 10px;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-align:left;white-space:nowrap;cursor:pointer;border-bottom:none;}
+  .ft-table-wrap thead tr.ft-hdr-row th:hover{color:#fff;}
+  .ft-table-wrap thead tr.ft-filter-row th{background:#f9fafb;padding:5px 8px;border-bottom:1px solid #e5e7eb;}
+  .ft-fcol{width:100%;padding:4px 6px;border:1px solid #d1d5db;border-radius:5px;font-size:11px;color:#111827;background:#fff;outline:none;}
+  .ft-fcol::placeholder{color:#9ca3af;}
+  .ft-pname-row{display:flex;align-items:center;gap:8px;}
+  .ft-pname-avatar{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;}
   </style>
 
   <div style="margin-bottom:14px;">
@@ -270,36 +285,54 @@ td{padding:9px 11px;font-size:13.5px;vertical-align:middle;}
   <div class="ft-cards" id="ftb-cards"></div>
 
   <div class="ft-filters">
-    <span style="font-size:11px;color:#4b5563;font-weight:600;">Category:</span>
     <select id="ftb-cat" class="ft-sel" onchange="ftOnControl('ftb')"><option value="all">All partners</option></select>
-    <span style="font-size:11px;color:#4b5563;font-weight:600;">Blocked On:</span>
-    <select id="ftb-blocked" class="ft-sel" onchange="ftOnControl('ftb')">
-      <option value="all">All</option>
-      <option value="Partner">Partner</option>
-      <option value="Spyne">Spyne</option>
-    </select>
     <span class="ft-clear" onclick="FT_UI['ftb'].stage='all';renderFT('ftb');">← All stages</span>
-    <div class="ft-srch"><span class="ic">⌕</span><input id="ftb-q" placeholder="Search partner…" oninput="ftOnControl('ftb')"></div>
+    <div class="ft-srch"><span class="ic">⌕</span><input id="ftb-q" placeholder="Search…" oninput="ftOnControl('ftb')"></div>
   </div>
 
-  <div class="tw">
+  <div class="tw ft-table-wrap">
     <div class="th2">
       <div class="tt" id="ftb-caption">All partners</div>
       <div class="tn">Click a stage card to filter, or a column header to sort · Next Steps is editable, saved in this browser</div>
     </div>
     <div style="overflow-x:auto;">
     <table>
-      <thead><tr>
+      <thead>
+      <tr class="ft-hdr-row">
         <th>#</th>
         <th onclick="ftSort('ftb','name')">Partner ↕</th>
         <th onclick="ftSort('ftb','stage')">Substage ↕</th>
         <th onclick="ftSort('ftb','arr')" style="text-align:right;">ARR at stake ↕</th>
+        <th style="text-align:center;">Agents</th>
         <th onclick="ftSort('ftb','rooftops')" style="text-align:center;">Rooftops ↕</th>
         <th style="text-align:center;">Groups</th>
         <th onclick="ftSort('ftb','days')" style="text-align:center;">Days stuck ↕</th>
         <th>Blocked · Why</th>
         <th>Next steps</th>
-      </tr></thead>
+      </tr>
+      <tr class="ft-filter-row">
+        <th></th>
+        <th><input class="ft-fcol" id="ftb-f-name" placeholder="Filter partner…" oninput="ftOnControl('ftb')"></th>
+        <th>
+          <select class="ft-fcol" id="ftb-f-substage" onchange="ftOnControl('ftb')">
+            <option value="all">All substages</option>
+          </select>
+        </th>
+        <th><input class="ft-fcol" id="ftb-f-minarr" type="number" placeholder="min $" oninput="ftOnControl('ftb')"></th>
+        <th></th>
+        <th><input class="ft-fcol" id="ftb-f-minrt" type="number" placeholder="min" oninput="ftOnControl('ftb')"></th>
+        <th><input class="ft-fcol" id="ftb-f-mingrp" type="number" placeholder="min" oninput="ftOnControl('ftb')"></th>
+        <th><input class="ft-fcol" id="ftb-f-mindays" type="number" placeholder="min d" oninput="ftOnControl('ftb')"></th>
+        <th>
+          <select class="ft-fcol" id="ftb-blocked" onchange="ftOnControl('ftb')">
+            <option value="all">All</option>
+            <option value="Partner">Partner</option>
+            <option value="Spyne">Spyne</option>
+          </select>
+        </th>
+        <th><input class="ft-fcol" id="ftb-f-next" placeholder="Filter…" oninput="ftOnControl('ftb')"></th>
+      </tr>
+      </thead>
       <tbody id="ftb-tbody"></tbody>
     </table>
     </div>
@@ -1324,10 +1357,23 @@ function ftSort(prefix, field){
 }
 function ftOnControl(prefix){
   const st = FT_UI[prefix];
-  st.cat = (document.getElementById(prefix+'-cat')||{}).value || 'all';
-  st.blocked = (document.getElementById(prefix+'-blocked')||{}).value || 'all';
-  st.q = ((document.getElementById(prefix+'-q')||{}).value||'').toLowerCase();
+  const gv = id => (document.getElementById(prefix+id)||{}).value || '';
+  st.cat = gv('-cat') || 'all';
+  st.blocked = gv('-blocked') || 'all';
+  st.q = gv('-q').toLowerCase();
+  st.fName = gv('-f-name').toLowerCase();
+  st.fSubstage = gv('-f-substage') || 'all';
+  st.fMinArr = gv('-f-minarr');
+  st.fMinRt = gv('-f-minrt');
+  st.fMinGrp = gv('-f-mingrp');
+  st.fMinDays = gv('-f-mindays');
+  st.fNext = gv('-f-next').toLowerCase();
   renderFT(prefix);
+}
+const FT_PALETTE = ['#2563eb','#16a34a','#059669','#d97706','#db2777','#7c3aed','#0f766e','#b45309','#9d174d','#1d4ed8','#4338ca','#0369a1'];
+function ftColor(name){
+  let h=0; for(let i=0;i<name.length;i++) h=(h*31+name.charCodeAt(i))>>>0;
+  return FT_PALETTE[h % FT_PALETTE.length];
 }
 function ftSubstageBuckets(rows){
   const buckets = {};
@@ -1382,18 +1428,31 @@ function renderFT(prefix){
       const oldestDays = days.length ? Math.max(...days) : null;
       const buckets = ftSubstageBuckets(rows);
       const active = st.stage===s ? 'active' : '';
+      const AV_MAX = 6;
+      const avatarNames = rows.slice(0, AV_MAX);
+      const avatarsHTML = avatarNames.map(r=>`<span class="ft-avatar" style="background:${ftColor(r.name)};" title="${r.name}">${r.name.trim()[0].toUpperCase()}</span>`).join('')
+        + (rows.length>AV_MAX ? `<span class="ft-avatar ft-avatar-more">+${rows.length-AV_MAX}</span>` : '');
       return `<div class="ft-card ${active}" onclick="ftFilterStage('${prefix}','${s}')">
         <div class="ft-card-hdr">
           <span class="ft-card-name"><span class="ft-dot" style="background:${col.fg};"></span>${s}</span>
           <span class="ft-card-count" style="color:${col.fg};">${rows.length}</span>
         </div>
-        <div class="ft-card-waiting">${waiting?fmtEV(waiting)+' waiting':''}</div>
+        <div class="ft-avatars">${avatarsHTML}</div>
+        <div class="ft-card-waiting">${waiting?fmtEV(waiting)+' waiting':'&nbsp;'}</div>
         <div class="ft-card-meta">${avgDays!==null?'avg '+avgDays+'d':'avg —'} · ${oldestDays!==null?'oldest '+oldestDays+'d':'oldest —'}</div>
         <div class="ft-card-prob-lbl">CONV. PROB <strong style="color:${col.fg};">${FT_STAGE_PROB[s]}%</strong></div>
         <div class="ft-card-prob-track"><div class="ft-card-prob-fill" style="width:${FT_STAGE_PROB[s]}%;background:${col.fg};"></div></div>
-        <div class="ft-substage-chips">${Object.keys(buckets).map(k=>`<span class="ft-substage-chip">${k} · ${buckets[k].count}${buckets[k].arr?' · '+fmtEV(buckets[k].arr):''}</span>`).join('') || '<span class="ft-dash">No entries</span>'}</div>
+        <div class="ft-substage-grid">${Object.keys(buckets).map(k=>`<div class="ft-substage-box"><div class="lbl">${k}</div><div class="val">${buckets[k].count}${buckets[k].arr?` <small>· ${fmtEV(buckets[k].arr)}</small>`:''}</div></div>`).join('') || '<div class="ft-dash">No entries</div>'}</div>
       </div>`;
     }).join('');
+  }
+
+  const substageSel = document.getElementById(prefix+'-f-substage');
+  if(substageSel){
+    const allSubstages = [...new Set(base.map(r=>r.substage).filter(Boolean))].sort();
+    if(substageSel.options.length<=1){
+      substageSel.innerHTML = '<option value="all">All substages</option>' + allSubstages.map(s=>`<option value="${s}">${s}</option>`).join('');
+    }
   }
 
   let d = base;
@@ -1401,6 +1460,13 @@ function renderFT(prefix){
   if(st.cat && st.cat!=='all') d = d.filter(r=>r.cat===st.cat);
   if(st.blocked && st.blocked!=='all') d = d.filter(r=>r.blocked===st.blocked);
   if(st.q) d = d.filter(r=>r.name.toLowerCase().includes(st.q) || r.cat.toLowerCase().includes(st.q));
+  if(st.fName) d = d.filter(r=>r.name.toLowerCase().includes(st.fName));
+  if(st.fSubstage && st.fSubstage!=='all') d = d.filter(r=>r.substage===st.fSubstage);
+  if(st.fMinArr) d = d.filter(r=>((ftBBMatch(r)||{}).arr||0) >= parseFloat(st.fMinArr));
+  if(st.fMinRt) d = d.filter(r=>ftRooftopsGroups(r).rooftops >= parseFloat(st.fMinRt));
+  if(st.fMinGrp) d = d.filter(r=>ftRooftopsGroups(r).groups >= parseFloat(st.fMinGrp));
+  if(st.fMinDays) d = d.filter(r=>(ftDaysStuck(r)??-1) >= parseFloat(st.fMinDays));
+  if(st.fNext) d = d.filter(r=>ftGetVal(r,'next').toLowerCase().includes(st.fNext));
 
   d = [...d].sort((a,b)=>{
     if(st.sort==='name') return st.dir*a.name.localeCompare(b.name);
@@ -1432,9 +1498,10 @@ function renderFT(prefix){
       const nextVal = (r.stage==='Live' && /^(live|completed)$/i.test((nextRaw||'').trim())) ? '' : nextRaw;
       return `<tr>
         <td style="color:#9ca3af;font-size:10px;font-weight:700;text-align:center;">${i+1}</td>
-        <td style="font-weight:700;font-size:13px;">${r.name}<div style="font-size:9.5px;color:#9ca3af;text-transform:uppercase;">${r.cat}</div></td>
+        <td class="ft-pname-row"><span class="ft-pname-avatar" style="background:${ftColor(r.name)};">${r.name.trim()[0].toUpperCase()}</span><span><span style="font-weight:700;font-size:13px;">${r.name}</span><div style="font-size:9.5px;color:#9ca3af;text-transform:uppercase;">${r.cat}</div></span></td>
         <td><span class="ft-stage-badge" style="background:${col.bg};color:${col.fg};">${r.substage||r.stage}</span></td>
         <td style="text-align:right;">${arrCell}</td>
+        <td style="text-align:center;"><span class="ft-dash">—</span></td>
         <td style="text-align:center;">${rtCell}</td>
         <td style="text-align:center;">${grpCell}</td>
         <td style="text-align:center;font-size:12px;color:#6b7280;">${daysCell}</td>
@@ -1504,36 +1571,54 @@ document.addEventListener('DOMContentLoaded', function(){ ftInit('ftb', true); r
   <div class="ft-cards" id="ftd-cards"></div>
 
   <div class="ft-filters">
-    <span style="font-size:11px;color:#4b5563;font-weight:600;">Category:</span>
     <select id="ftd-cat" class="ft-sel" onchange="ftOnControl('ftd')"><option value="all">All partners</option></select>
-    <span style="font-size:11px;color:#4b5563;font-weight:600;">Blocked On:</span>
-    <select id="ftd-blocked" class="ft-sel" onchange="ftOnControl('ftd')">
-      <option value="all">All</option>
-      <option value="Partner">Partner</option>
-      <option value="Spyne">Spyne</option>
-    </select>
     <span class="ft-clear" onclick="FT_UI['ftd'].stage='all';renderFT('ftd');">← All stages</span>
-    <div class="ft-srch"><span class="ic">⌕</span><input id="ftd-q" placeholder="Search partner…" oninput="ftOnControl('ftd')"></div>
+    <div class="ft-srch"><span class="ic">⌕</span><input id="ftd-q" placeholder="Search…" oninput="ftOnControl('ftd')"></div>
   </div>
 
-  <div class="tw">
+  <div class="tw ft-table-wrap">
     <div class="th2">
       <div class="tt" id="ftd-caption">All partners</div>
       <div class="tn">Click a stage card to filter, or a column header to sort · Next Steps is editable, saved in this browser</div>
     </div>
     <div style="overflow-x:auto;">
     <table>
-      <thead><tr>
+      <thead>
+      <tr class="ft-hdr-row">
         <th>#</th>
         <th onclick="ftSort('ftd','name')">Partner ↕</th>
         <th onclick="ftSort('ftd','stage')">Substage ↕</th>
         <th onclick="ftSort('ftd','arr')" style="text-align:right;">ARR at stake ↕</th>
+        <th style="text-align:center;">Agents</th>
         <th onclick="ftSort('ftd','rooftops')" style="text-align:center;">Rooftops ↕</th>
         <th style="text-align:center;">Groups</th>
         <th onclick="ftSort('ftd','days')" style="text-align:center;">Days stuck ↕</th>
         <th>Blocked · Why</th>
         <th>Next steps</th>
-      </tr></thead>
+      </tr>
+      <tr class="ft-filter-row">
+        <th></th>
+        <th><input class="ft-fcol" id="ftd-f-name" placeholder="Filter partner…" oninput="ftOnControl('ftd')"></th>
+        <th>
+          <select class="ft-fcol" id="ftd-f-substage" onchange="ftOnControl('ftd')">
+            <option value="all">All substages</option>
+          </select>
+        </th>
+        <th><input class="ft-fcol" id="ftd-f-minarr" type="number" placeholder="min $" oninput="ftOnControl('ftd')"></th>
+        <th></th>
+        <th><input class="ft-fcol" id="ftd-f-minrt" type="number" placeholder="min" oninput="ftOnControl('ftd')"></th>
+        <th><input class="ft-fcol" id="ftd-f-mingrp" type="number" placeholder="min" oninput="ftOnControl('ftd')"></th>
+        <th><input class="ft-fcol" id="ftd-f-mindays" type="number" placeholder="min d" oninput="ftOnControl('ftd')"></th>
+        <th>
+          <select class="ft-fcol" id="ftd-blocked" onchange="ftOnControl('ftd')">
+            <option value="all">All</option>
+            <option value="Partner">Partner</option>
+            <option value="Spyne">Spyne</option>
+          </select>
+        </th>
+        <th><input class="ft-fcol" id="ftd-f-next" placeholder="Filter…" oninput="ftOnControl('ftd')"></th>
+      </tr>
+      </thead>
       <tbody id="ftd-tbody"></tbody>
     </table>
     </div>
